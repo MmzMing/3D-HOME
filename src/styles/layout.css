@@ -1,0 +1,177 @@
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.app-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--background);
+  color: var(--ink);
+  isolation: isolate;
+}
+
+.room-stage,
+.room-canvas,
+.room-canvas canvas,
+.room-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.room-stage {
+  z-index: var(--z-stage);
+}
+
+.room-fallback {
+  display: grid;
+  place-items: center;
+  padding: 9vw;
+}
+
+.room-fallback img {
+  width: min(1100px, 100%);
+  max-height: 76vh;
+  object-fit: contain;
+}
+
+.room-stage-frame {
+  position: absolute;
+  inset: 18px;
+  border: 1px solid var(--border);
+  pointer-events: none;
+}
+
+.room-stage-frame::before,
+.room-stage-frame::after {
+  position: absolute;
+  width: 54px;
+  height: 8px;
+  background: var(--background);
+  content: '';
+}
+
+.room-stage-frame::before {
+  top: -4px;
+  left: 64px;
+}
+
+.room-stage-frame::after {
+  right: 64px;
+  bottom: -4px;
+}
+
+.room-heading {
+  position: absolute;
+  z-index: var(--z-controls);
+  top: 38px;
+  left: 42px;
+  display: flex;
+  max-width: calc(100vw - 84px);
+  align-items: flex-start;
+  gap: 24px;
+  pointer-events: none;
+}
+
+.room-heading h1 {
+  margin-bottom: 0;
+  font-family: var(--font-pixel);
+  font-size: clamp(24px, 3vw, 42px);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+.room-hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.room-actions {
+  position: absolute;
+  z-index: var(--z-controls);
+  top: 36px;
+  right: 42px;
+  display: flex;
+  gap: 8px;
+}
+
+.camera-zones {
+  position: absolute;
+  z-index: var(--z-controls);
+  right: 42px;
+  bottom: 38px;
+  display: flex;
+  gap: 8px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.camera-zones button {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.camera-zones button:hover,
+.camera-zones button[aria-pressed='true'] {
+  border-color: var(--active);
+  background: var(--active-soft);
+  color: var(--active);
+}
+
+.room-signature {
+  position: absolute;
+  z-index: var(--z-overlay);
+  bottom: 44px;
+  left: 42px;
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+}
+
+.fatal-error {
+  display: grid;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 32px;
+  place-content: center;
+  justify-items: start;
+  background: var(--background);
+  color: var(--ink);
+}
+
+.fatal-error h1 {
+  margin-bottom: 12px;
+  font-family: var(--font-pixel);
+}
+
+.fatal-error p:not(.eyebrow) {
+  max-width: 58ch;
+  color: var(--muted);
+}

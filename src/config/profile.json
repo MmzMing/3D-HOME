@@ -1,0 +1,78 @@
+{
+  "avatar": "/assets/images/profile/home1.webp",
+  "bio": "主页正在维修中哦，先用这个临时的前端顶着，只保留了基础的功能。",
+  "experience": [],
+  "github": {
+    "username": "MmzMing"
+  },
+  "intro": {
+    "audioPhrases": [
+      { "phrase": "啾比~", "track": "/assets/audio/profile/chubby_0.mp3" },
+      { "phrase": "啾~比。", "track": "/assets/audio/profile/chubby_1.mp3" },
+      { "phrase": "啾比~~~~", "track": "/assets/audio/profile/chubby_2.mp3" },
+      { "phrase": "菲八啾比！！！！！", "track": "/assets/audio/profile/phoeba_chubby_0.mp3" },
+      { "phrase": "菲八啾比！", "track": "/assets/audio/profile/phoeba_chubby_1.mp3" },
+      { "phrase": "菲八啾比(σ｀д′)σ", "track": "/assets/audio/profile/phoeba_chubby_2.mp3" },
+      { "phrase": "菲八啾比╰（‵□′）╯", "track": "/assets/audio/profile/phoeba_chubby_3.mp3" },
+      { "phrase": "菲比~", "track": "/assets/audio/profile/phoebe_0.mp3" },
+      { "phrase": "菲比ヾ(•ω•`)o", "track": "/assets/audio/profile/phoebe_1.mp3" },
+      { "phrase": "菲~比~~", "track": "/assets/audio/profile/phoebe_2.mp3" },
+      {
+        "phrase": "菲比啾比Ciallo～(∠・ω< )⌒★",
+        "track": "/assets/audio/profile/phoebe_chubby_0.mp3"
+      },
+      { "phrase": "菲比啾比(。・ω・。)", "track": "/assets/audio/profile/phoebe_chubby_1.mp3" },
+      { "phrase": "菲比啾比－O－", "track": "/assets/audio/profile/phoebe_chubby_2.mp3" },
+      {
+        "phrase": "菲比啾比Ciallo～(∠・ω< )⌒★",
+        "track": "/assets/audio/profile/phoebe_chubby_3.mp3"
+      },
+      { "phrase": "菲比啾比~~", "track": "/assets/audio/profile/phoebe_chubby_4.mp3" },
+      { "phrase": "菲比啾比(*^_^*)", "track": "/assets/audio/profile/phoebe_chubby_5.mp3" },
+      { "phrase": "菲比啾比(╹ڡ╹ )", "track": "/assets/audio/profile/phoebe_chubby_6.mp3" },
+      { "phrase": "菲比啾比(*^▽^*)", "track": "/assets/audio/profile/phoebe_chubby_7.mp3" }
+    ],
+    "role": "全干工程师",
+    "sticker": "/assets/images/profile/home2.webp"
+  },
+  "name": "MmzMing",
+  "skills": [
+    { "color": "#437291", "icon": "java", "name": "Java" },
+    { "color": "#c71a36", "icon": "maven", "name": "Maven" },
+    { "color": "#d24939", "icon": "jenkins", "name": "Jenkins" },
+    { "color": "#6db33f", "icon": "spring", "name": "Spring" },
+    { "color": "#6db33f", "icon": "spring-cloud", "name": "Spring Cloud" },
+    { "color": "#4479a1", "icon": "mysql", "name": "MySQL" },
+    { "color": "#f80000", "icon": "oracle", "name": "Oracle" },
+    { "color": "#47a248", "icon": "mongodb", "name": "MongoDB" },
+    { "color": "#ff4438", "icon": "redis", "name": "Redis" },
+    { "color": "#005571", "icon": "elasticsearch", "name": "Elasticsearch" },
+    { "color": "#d22128", "icon": "rocketmq", "name": "RocketMQ" },
+    { "color": "#2496ed", "icon": "docker", "name": "Docker" },
+    { "color": "#f7df1e", "icon": "javascript", "name": "JavaScript" },
+    { "color": "#3178c6", "icon": "typescript", "name": "TypeScript" },
+    { "color": "#61dafb", "icon": "react", "name": "React" },
+    { "color": "#4fc08d", "icon": "vue", "name": "Vue.js" },
+    { "color": "#5fa04e", "icon": "node", "name": "Node.js" },
+    { "color": "#e34f26", "icon": "html", "name": "HTML5" },
+    { "color": "#663399", "icon": "css", "name": "CSS" },
+    { "color": "#06b6d4", "icon": "tailwind", "name": "Tailwind CSS" }
+  ],
+  "socialLinks": [
+    {
+      "color": "#ffffff",
+      "label": "GitHub",
+      "url": "https://github.com/MmzMing"
+    },
+    {
+      "color": "#fb7299",
+      "label": "Bilibili",
+      "url": "https://space.bilibili.com/15446538"
+    },
+    {
+      "color": "#12b7f5",
+      "label": "QQ群",
+      "url": "https://qm.qq.com/q/FyyFwfnoEU"
+    }
+  ]
+}

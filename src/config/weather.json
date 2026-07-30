@@ -1,0 +1,6 @@
+{
+  "language": "zh",
+  "provider": "qweather",
+  "refreshIntervalMs": 1800000,
+  "unit": "m"
+}

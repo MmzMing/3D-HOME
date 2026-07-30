@@ -1,0 +1,38 @@
+[
+  {
+    "id": "blog",
+    "title": "博客",
+    "image": "/assets/images/links/blog.webp",
+    "url": "https://tblog.mmzhiku.xyz",
+    "description": "个人博客与文章归档。",
+    "tags": ["博客", "文章"],
+    "ctaLabel": "访问博客"
+  },
+  {
+    "id": "image-hosting",
+    "title": "图床",
+    "image": "/assets/images/links/img.webp",
+    "url": "https://img.mmzhiku.xyz",
+    "description": "用于管理和访问图片资源。",
+    "tags": ["图片", "资源"],
+    "ctaLabel": "访问图床"
+  },
+  {
+    "id": "analytics",
+    "title": "统计",
+    "image": "/assets/images/links/stats.webp",
+    "url": "https://stats.mmzhiku.xyz/share/uAfsjwbIKgVPjxtc",
+    "description": "查看网站访问统计数据。",
+    "tags": ["统计", "数据"],
+    "ctaLabel": "查看统计"
+  },
+  {
+    "id": "resume-editor",
+    "title": "简历编辑器",
+    "image": "/assets/images/links/resume.webp",
+    "url": "https://resume.mmzmingzsk.dpdns.org",
+    "description": "在线编辑与维护个人简历。",
+    "tags": ["简历", "编辑"],
+    "ctaLabel": "打开编辑器"
+  }
+]

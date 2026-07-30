@@ -1,0 +1,20 @@
+{
+  "local": {
+    "playlist": []
+  },
+  "meting": {
+    "api": "https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r",
+    "auth": "",
+    "fallbackApis": [
+      "https://api.injahow.cn/meting/?server=:server&type=:type&id=:id",
+      "https://api.moeyao.cn/meting/?server=:server&type=:type&id=:id"
+    ],
+    "id": "17955431099",
+    "server": "netease",
+    "type": "playlist"
+  },
+  "mode": "meting",
+  "playMode": "list",
+  "showLyrics": true,
+  "volume": 0.3
+}

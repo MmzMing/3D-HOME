@@ -1,0 +1,155 @@
+{
+  "scopes": [
+    {
+      "id": "web",
+      "label": "网页",
+      "icon": "Globe2",
+      "placeholder": "选择网页搜索服务",
+      "items": [
+        {
+          "id": "home",
+          "label": "房间总览",
+          "kind": "command",
+          "command": "overview",
+          "icon": "House"
+        },
+        {
+          "id": "about",
+          "label": "个人与 GitHub",
+          "kind": "command",
+          "command": "open-profile",
+          "icon": "UserRound"
+        },
+        {
+          "id": "feeds",
+          "label": "RSS 书架",
+          "kind": "command",
+          "command": "focus-bookshelf",
+          "icon": "Rss"
+        },
+        {
+          "id": "music",
+          "label": "音乐",
+          "kind": "command",
+          "command": "open-music",
+          "icon": "Music2"
+        },
+        {
+          "id": "bing",
+          "label": "Bing",
+          "kind": "external",
+          "url": "https://www.bing.com/",
+          "searchTemplate": "https://www.bing.com/search?q={query}"
+        },
+        {
+          "id": "google",
+          "label": "Google",
+          "kind": "external",
+          "url": "https://www.google.com/",
+          "searchTemplate": "https://www.google.com/search?q={query}"
+        },
+        {
+          "id": "baidu",
+          "label": "百度",
+          "kind": "external",
+          "url": "https://www.baidu.com/",
+          "searchTemplate": "https://www.baidu.com/s?wd={query}"
+        }
+      ]
+    },
+    {
+      "id": "music",
+      "label": "音乐",
+      "icon": "Music2",
+      "placeholder": "选择音乐搜索服务",
+      "items": [
+        {
+          "id": "netease",
+          "label": "网易云音乐",
+          "kind": "external",
+          "url": "https://music.163.com/",
+          "searchTemplate": "https://music.163.com/#/search/m/?s={query}&type=1"
+        },
+        {
+          "id": "qq-music",
+          "label": "QQ 音乐",
+          "kind": "external",
+          "url": "https://y.qq.com/",
+          "searchTemplate": "https://y.qq.com/n/ryqq/search?w={query}"
+        },
+        {
+          "id": "kugou",
+          "label": "酷狗音乐",
+          "kind": "external",
+          "url": "https://www.kugou.com/",
+          "searchTemplate": "https://www.kugou.com/yy/html/search.html#searchType=song&searchKeyWord={query}"
+        }
+      ]
+    },
+    {
+      "id": "development",
+      "label": "开发",
+      "icon": "Code2",
+      "placeholder": "选择开发搜索服务",
+      "items": [
+        {
+          "id": "github",
+          "label": "GitHub",
+          "kind": "external",
+          "url": "https://github.com/",
+          "searchTemplate": "https://github.com/search?q={query}"
+        },
+        {
+          "id": "docker",
+          "label": "Docker",
+          "kind": "external",
+          "url": "https://hub.docker.com/",
+          "searchTemplate": "https://hub.docker.com/search?q={query}"
+        },
+        {
+          "id": "npm",
+          "label": "npm",
+          "kind": "external",
+          "url": "https://www.npmjs.com/",
+          "searchTemplate": "https://www.npmjs.com/search?q={query}"
+        },
+        {
+          "id": "mdn",
+          "label": "MDN",
+          "kind": "external",
+          "url": "https://developer.mozilla.org/",
+          "searchTemplate": "https://developer.mozilla.org/zh-CN/search?q={query}"
+        }
+      ]
+    },
+    {
+      "id": "assets",
+      "label": "素材",
+      "icon": "Image",
+      "placeholder": "选择素材搜索服务",
+      "items": [
+        {
+          "id": "pixiv",
+          "label": "Pixiv",
+          "kind": "external",
+          "url": "https://www.pixiv.net/",
+          "searchTemplate": "https://www.pixiv.net/tags/{query}/artworks"
+        },
+        {
+          "id": "pexels",
+          "label": "Pexels",
+          "kind": "external",
+          "url": "https://www.pexels.com/",
+          "searchTemplate": "https://www.pexels.com/search/{query}/"
+        },
+        {
+          "id": "unsplash",
+          "label": "Unsplash",
+          "kind": "external",
+          "url": "https://unsplash.com/",
+          "searchTemplate": "https://unsplash.com/s/photos/{query}/"
+        }
+      ]
+    }
+  ]
+}
