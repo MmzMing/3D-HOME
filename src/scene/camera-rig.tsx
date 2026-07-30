@@ -7,9 +7,9 @@ import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { useRoomStore } from '@/stores/room-store';
 
 const zones = {
-  lounge: { position: [20, 14.5, 23] as const, target: [0.8, 1.8, 1.8] as const, zoom: 64 },
-  overview: { position: [20, 14.5, 22] as const, target: [0, 2.85, 0.18] as const, zoom: 53 },
-  workspace: { position: [18.5, 13.2, 21] as const, target: [-0.8, 2.7, -5.8] as const, zoom: 70 },
+  lounge: { position: [20, 14.5, 23] as const, target: [0.8, 1.8, 1.8] as const, zoom: 70 },
+  overview: { position: [20, 14.5, 22] as const, target: [0, 2.85, 0.18] as const, zoom: 58 },
+  workspace: { position: [18.5, 13.2, 21] as const, target: [-0.8, 2.7, -5.8] as const, zoom: 77 },
 };
 
 export function CameraRig() {

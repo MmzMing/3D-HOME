@@ -12,7 +12,7 @@ export function RoomCanvas() {
         orthographic
         dpr={[1, 1.75]}
         frameloop="demand"
-        camera={{ far: 140, near: 0.1, position: [20, 14.5, 22], zoom: 47 }}
+        camera={{ far: 140, near: 0.1, position: [20, 14.5, 22], zoom: 58 }}
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
         onCreated={({ gl }) => {
           gl.setClearColor(theme === 'light' ? '#ffffff' : '#0b0d0f');

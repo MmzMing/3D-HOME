@@ -33,7 +33,7 @@ export function ProfileDoll() {
   }, [invalidate, pressed]);
 
   return (
-    <group position={[0.35, 0, 0.55]} rotation={[0, 0.74, 0]}>
+    <group position={[0.35, 0, 0.55]} rotation={[0, 0.74, 0]} scale={[1.18, 1.18, 1.18]}>
       <group
         ref={animated}
         {...interaction.bind}

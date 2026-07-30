@@ -6,6 +6,7 @@ import linksData from './links.json';
 import musicData from './music.json';
 import profileData from './profile.json';
 import searchData from './search.json';
+import siteRecordsData from './site-records.json';
 import themeData from './theme.json';
 import weatherData from './weather.json';
 
@@ -121,6 +122,16 @@ const searchSchema = z.object({
   ),
 });
 
+const siteRecordLinkSchema = z.object({
+  label: z.string().min(1),
+  url: httpsUrl,
+});
+const siteRecordsSchema = z.object({
+  copyright: z.string().min(1),
+  icp: siteRecordLinkSchema,
+  police: siteRecordLinkSchema.extend({ icon: localAsset }),
+});
+
 const themeSchema = z.object({
   defaultMode: z.enum(['light', 'dark']),
   soundStorageKey: z.string(),
@@ -140,6 +151,7 @@ export const linksConfig = z.array(linkSchema).parse(linksData);
 export const musicConfig = musicSchema.parse(musicData);
 export const profileConfig = profileSchema.parse(profileData);
 export const searchConfig = searchSchema.parse(searchData);
+export const siteRecordsConfig = siteRecordsSchema.parse(siteRecordsData);
 export const themeConfig = themeSchema.parse(themeData);
 export const weatherConfig = weatherSchema.parse(weatherData);
 

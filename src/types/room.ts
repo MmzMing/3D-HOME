@@ -45,7 +45,7 @@ export interface RoomObjectState {
   coffeeSteaming: boolean;
   curtainsOpen: boolean;
   cushionPulse: number;
-  pillowPulse: number;
+  quiltFolded: boolean;
   deskLampOn: boolean;
   doorOpen: boolean;
   drawerOpen: boolean;

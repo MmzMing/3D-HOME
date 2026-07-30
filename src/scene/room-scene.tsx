@@ -16,6 +16,7 @@ import { OfficeChair } from '@/scene/objects/office-chair';
 import { Plant } from '@/scene/objects/plant';
 import { Portrait } from '@/scene/objects/portrait';
 import { ProfileDoll } from '@/scene/objects/profile-doll';
+import { SiteRecords } from '@/scene/objects/site-records';
 import { Sofa } from '@/scene/objects/sofa';
 import { WallClock } from '@/scene/objects/clock';
 import { WallSwitch } from '@/scene/objects/wall-switch';
@@ -30,30 +31,33 @@ export function RoomScene() {
     <>
       <CameraRig />
       <SceneTicker />
-      <RoomShell />
-      <Desk />
-      <Monitor />
-      <Laptop />
-      <Keyboard />
-      <Mouse />
-      <DeskLamp />
-      <Coffee />
-      <Plant />
-      <Portrait />
-      <ProfileDoll />
-      <WallSwitch />
-      <Door />
-      <Window />
-      <WeatherDoll />
-      <Bookshelf />
-      <AirConditioner />
-      <Gramophone />
-      <DeskFan />
-      <WallClock />
-      <OfficeChair />
-      <Sofa />
-      <CoffeeTable />
-      <Bed />
+      <group position={[0, -0.85, 0]}>
+        <RoomShell />
+        <Desk />
+        <Monitor />
+        <Laptop />
+        <Keyboard />
+        <Mouse />
+        <DeskLamp />
+        <Coffee />
+        <Plant />
+        <Portrait />
+        <ProfileDoll />
+        <WallSwitch />
+        <Door />
+        <Window />
+        <WeatherDoll />
+        <Bookshelf />
+        <AirConditioner />
+        <Gramophone />
+        <DeskFan />
+        <WallClock />
+        <SiteRecords />
+        <OfficeChair />
+        <Sofa />
+        <CoffeeTable />
+        <Bed />
+      </group>
     </>
   );
 }

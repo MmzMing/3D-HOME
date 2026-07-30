@@ -1,3 +1,4 @@
+import { Text } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useRef } from 'react';
 import type { Group } from 'three';
@@ -5,6 +6,7 @@ import type { Group } from 'three';
 import { InteractionProxy, LineBox, LinePlane, LineSphere } from '@/scene/primitives/line-shape';
 import { useRoomInteraction } from '@/scene/primitives/use-room-interaction';
 import { useRoomStore } from '@/stores/room-store';
+import { siteRecordsConfig } from '@/config';
 
 export function Door() {
   const panel = useRef<Group>(null);
@@ -31,6 +33,15 @@ export function Door() {
       <LineBox args={[0.14, 4.7, 0.34]} position={[2.21, 2.35, 0]} />
       <LineBox args={[2.28, 0.14, 0.34]} position={[1.14, 4.63, 0]} />
       <LineBox args={[2.28, 0.1, 0.48]} position={[1.14, 0.05, 0.12]} />
+      <Text
+        anchorX="center"
+        anchorY="middle"
+        color={theme === 'light' ? '#000000' : '#f3f4f6'}
+        fontSize={0.22}
+        position={[1.14, 4.98, 0.15]}
+      >
+        {siteRecordsConfig.copyright}
+      </Text>
 
       <group ref={panel} position={[0.17, 0.12, 0.1]}>
         <LineBox

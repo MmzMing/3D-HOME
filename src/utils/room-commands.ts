@@ -133,7 +133,7 @@ export function activateRoomObject(id: RoomObjectId) {
       sound('soft');
       break;
     case 'bed':
-      room.pulseObject('pillowPulse');
+      room.patchObjectState({ quiltFolded: !state.quiltFolded });
       sound('soft');
       break;
     case 'coffee':

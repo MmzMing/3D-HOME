@@ -22,7 +22,7 @@ interface RoomState {
   openLink: (linkId: string) => void;
   openPanel: (panel: Exclude<PanelId, 'feed' | 'link' | null>) => void;
   patchObjectState: (patch: Partial<RoomObjectState>) => void;
-  pulseObject: (key: 'cushionPulse' | 'pillowPulse' | 'plantPulse' | 'weatherDollPulse') => void;
+  pulseObject: (key: 'cushionPulse' | 'plantPulse' | 'weatherDollPulse') => void;
   setCameraZone: (zone: CameraZone) => void;
   setHoveredObject: (id: string | null) => void;
   setLinkClusterOpen: (open: boolean) => void;
@@ -40,7 +40,7 @@ const initialObjectState: RoomObjectState = {
   coffeeSteaming: true,
   curtainsOpen: true,
   cushionPulse: 0,
-  pillowPulse: 0,
+  quiltFolded: false,
   deskLampOn: false,
   doorOpen: false,
   drawerOpen: false,
