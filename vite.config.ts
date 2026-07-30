@@ -70,13 +70,16 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), localEdgeApi(edgeEnv)],
     resolve: { tsconfigPaths: true },
     build: {
+      // The 3D runtime is intentionally shipped as one vendor chunk.
+      chunkSizeWarningLimit: 1200,
       target: 'es2023',
       sourcemap: true,
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes('node_modules/three')) return 'three-core';
-            if (id.includes('node_modules/@react-three')) return 'react-three-vendor';
+            if (id.includes('node_modules/three') || id.includes('node_modules/@react-three')) {
+              return 'three-vendor';
+            }
             if (
               id.includes('node_modules/react') ||
               id.includes('node_modules/zustand') ||
