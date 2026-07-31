@@ -2,6 +2,12 @@ import { profileConfig } from '@/config';
 
 let context: AudioContext | null = null;
 const activeProfileAudios = new Set<HTMLAudioElement>();
+const objectSoundTracks = {
+  'air-conditioner-on': '/assets/audio/room/air-conditioner-on.mp3',
+  'window-open': '/assets/audio/room/window-open.mp3',
+} as const;
+type ObjectSoundKind = keyof typeof objectSoundTracks;
+const activeObjectAudios = new Map<ObjectSoundKind, HTMLAudioElement>();
 
 function getContext() {
   context ??= new AudioContext();
@@ -46,6 +52,31 @@ export function playRandomProfileAudio(enabled: boolean) {
   if (clip === undefined) return;
 
   playProfileAudio(clip.track, enabled);
+}
+
+export function playObjectSound(kind: ObjectSoundKind, enabled: boolean) {
+  if (!enabled) return;
+
+  const previous = activeObjectAudios.get(kind);
+  if (previous !== undefined) {
+    previous.pause();
+    previous.removeAttribute('src');
+    previous.load();
+  }
+
+  const audio = new Audio(objectSoundTracks[kind]);
+  const release = () => {
+    if (activeObjectAudios.get(kind) === audio) activeObjectAudios.delete(kind);
+    audio.pause();
+    audio.removeAttribute('src');
+    audio.load();
+  };
+
+  activeObjectAudios.set(kind, audio);
+  audio.volume = kind === 'air-conditioner-on' ? 0.34 : 0.46;
+  audio.addEventListener('ended', release, { once: true });
+  audio.addEventListener('error', release, { once: true });
+  void audio.play().catch(release);
 }
 
 export function playProfileAudio(track: string, enabled: boolean) {

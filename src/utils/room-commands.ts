@@ -2,7 +2,7 @@ import { feedsConfig } from '@/config';
 import { usePlayerStore } from '@/stores/player-store';
 import { useRoomStore } from '@/stores/room-store';
 import type { RoomCommand, RoomObjectDefinition, RoomObjectId } from '@/types/room';
-import { playRandomProfileAudio, playRoomSound } from '@/utils/room-audio';
+import { playObjectSound, playRandomProfileAudio, playRoomSound } from '@/utils/room-audio';
 
 export const roomObjects: readonly RoomObjectDefinition[] = [
   { id: 'monitor', label: '主显示器链接', zone: 'workspace' },
@@ -106,18 +106,24 @@ export function activateRoomObject(id: RoomObjectId) {
         sound('soft');
       }
       break;
-    case 'window':
-      room.patchObjectState({ windowOpen: !state.windowOpen });
-      sound('soft');
+    case 'window': {
+      const opening = !state.windowOpen;
+      room.patchObjectState({ windowOpen: opening });
+      if (opening) playObjectSound('window-open', room.isSoundEnabled);
+      else sound('soft');
       break;
+    }
     case 'curtains':
       room.patchObjectState({ curtainsOpen: !state.curtainsOpen });
       sound('soft');
       break;
-    case 'air-conditioner':
-      room.patchObjectState({ airConditionerOn: !state.airConditionerOn });
-      sound('switch');
+    case 'air-conditioner': {
+      const turningOn = !state.airConditionerOn;
+      room.patchObjectState({ airConditionerOn: turningOn });
+      if (turningOn) playObjectSound('air-conditioner-on', room.isSoundEnabled);
+      else sound('switch');
       break;
+    }
     case 'fan':
       room.patchObjectState({ fanSpeed: ((state.fanSpeed + 1) % 3) as 0 | 1 | 2 });
       sound();
