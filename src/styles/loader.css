@@ -1,0 +1,60 @@
+.room-loader {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: #000;
+  opacity: 1;
+  transition: opacity 280ms ease;
+}
+
+.room-loader[data-loader-theme='dark'] {
+  background: #0b0d0f;
+  color: #f3f4f6;
+}
+
+.room-loader[data-complete='true'] {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.room-loader-bulb {
+  width: 216px;
+  height: 216px;
+}
+
+.room-loader-bulb svg {
+  display: block;
+  width: 216px;
+  height: 216px;
+  overflow: visible;
+  fill: currentcolor;
+  transform-origin: 50% 15%;
+  animation: room-loader-swing 1.3s ease-in-out infinite alternate;
+}
+
+.room-loader-progress {
+  fill: currentcolor;
+  font-family: var(--font-pixel);
+  font-size: 118px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+@keyframes room-loader-swing {
+  from {
+    transform: rotate(18deg);
+  }
+
+  to {
+    transform: rotate(-18deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .room-loader-bulb svg {
+    animation: none;
+  }
+}

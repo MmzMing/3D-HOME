@@ -1,5 +1,6 @@
 import { LineBox, LinePlane } from '@/scene/primitives/line-shape';
 import { useRoomInteraction } from '@/scene/primitives/use-room-interaction';
+import { useRoomStore } from '@/stores/room-store';
 
 function LaptopKeyboard({ active }: { active: boolean }) {
   return (
@@ -25,6 +26,7 @@ function LaptopKeyboard({ active }: { active: boolean }) {
 
 export function Laptop() {
   const interaction = useRoomInteraction('laptop');
+  const theme = useRoomStore((state) => state.theme);
   return (
     <group position={[0.45, 2.18, -7.08]} rotation={[0, -0.14, 0]} {...interaction.bind}>
       <LineBox args={[0.98, 0.1, 0.54]} position={[0, 0.09, 0.1]} />
@@ -45,6 +47,17 @@ export function Laptop() {
             position={[0, 0.45, 0]}
             hovered={interaction.hovered}
             accent={interaction.hovered ? 'active' : undefined}
+            glow={
+              theme === 'dark'
+                ? {
+                    color: '#c4f1ff',
+                    intensity: 1.85,
+                    lineWidth: 1.35,
+                    opacity: 0.62,
+                    scale: 1.01,
+                  }
+                : undefined
+            }
           />
           <LinePlane
             args={[1.18, 0.7]}

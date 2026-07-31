@@ -10,22 +10,27 @@ export function SceneTicker() {
   const fanSpeed = useRoomStore((state) => state.objectState.fanSpeed);
   const clockRunning = useRoomStore((state) => state.objectState.clockRunning);
   const coffeeSteaming = useRoomStore((state) => state.objectState.coffeeSteaming);
+  const theme = useRoomStore((state) => state.theme);
   const playback = usePlayerStore((state) => state.status);
   const reducedMotion = useReducedMotion();
   const invalidate = useThree((state) => state.invalidate);
+  const mobile = useThree((state) => state.size.width < 720);
 
   useEffect(() => {
-    const continuous =
-      !reducedMotion &&
-      (airConditionerOn ||
-        fanSpeed > 0 ||
-        clockRunning ||
-        coffeeSteaming ||
-        playback === 'playing');
+    const highMotion = airConditionerOn || fanSpeed > 0 || playback === 'playing';
+    const ambientMotion = clockRunning || coffeeSteaming || theme === 'dark';
+    const continuous = !reducedMotion && (highMotion || ambientMotion);
     if (!continuous) return;
+
+    const targetFps = highMotion ? (mobile ? 30 : 60) : mobile ? 15 : 30;
+    const frameInterval = 1000 / targetFps;
     let frame = 0;
-    const tick = () => {
-      if (!document.hidden) invalidate();
+    let previous = 0;
+    const tick = (time: number) => {
+      if (!document.hidden && time - previous >= frameInterval) {
+        previous = time - ((time - previous) % frameInterval);
+        invalidate();
+      }
       frame = window.requestAnimationFrame(tick);
     };
     frame = window.requestAnimationFrame(tick);
@@ -36,8 +41,10 @@ export function SceneTicker() {
     coffeeSteaming,
     fanSpeed,
     invalidate,
+    mobile,
     playback,
     reducedMotion,
+    theme,
   ]);
 
   return null;

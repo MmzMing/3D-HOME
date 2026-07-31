@@ -14,7 +14,8 @@ export function WallClock() {
   const pendulum = useRef<Group>(null);
   const interaction = useRoomInteraction('clock');
   const running = useRoomStore((state) => state.objectState.clockRunning);
-  const color = useRoomStore((state) => (state.theme === 'light' ? '#000000' : '#f3f4f6'));
+  const theme = useRoomStore((state) => state.theme);
+  const color = theme === 'light' ? '#000000' : '#f3f4f6';
   const invalidate = useThree((state) => state.invalidate);
 
   useFrame((state) => {
@@ -36,6 +37,17 @@ export function WallClock() {
     <group position={[2.7, 5.35, -8.26]} {...interaction.bind}>
       <LineCylinder
         args={[0.72, 0.72, 0.08, 32]}
+        glow={
+          theme === 'dark'
+            ? {
+                color: '#67e8f9',
+                intensity: 2.05,
+                lineWidth: 1.45,
+                opacity: 0.7,
+                scale: 1.012,
+              }
+            : undefined
+        }
         rotation={[Math.PI / 2, 0, 0]}
         hovered={interaction.hovered}
       />

@@ -26,6 +26,7 @@ import { WeatherDoll } from '@/scene/objects/weather-doll';
 import { CameraRig } from '@/scene/camera-rig';
 import { RoomShell } from '@/scene/room-shell';
 import { SceneTicker } from '@/scene/scene-ticker';
+import { RoomPostprocessing } from '@/scene/effects/room-postprocessing';
 
 export function RoomScene() {
   return (
@@ -60,6 +61,7 @@ export function RoomScene() {
         <CoffeeTable />
         <Bed />
       </group>
+      <RoomPostprocessing />
     </>
   );
 }

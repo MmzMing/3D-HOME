@@ -1,26 +1,38 @@
 import { Canvas } from '@react-three/fiber';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 
 import { RoomScene } from '@/scene/room-scene';
 import { useRoomStore } from '@/stores/room-store';
 
-export function RoomCanvas() {
+interface RoomCanvasProps {
+  onCanvasReady: () => void;
+  onSceneReady: () => void;
+}
+
+function SceneReady({ onReady }: { onReady: () => void }) {
+  useEffect(() => onReady(), [onReady]);
+  return null;
+}
+
+export function RoomCanvas({ onCanvasReady, onSceneReady }: RoomCanvasProps) {
   const theme = useRoomStore((state) => state.theme);
   return (
     <div className="room-canvas" aria-hidden="true" data-testid="room-canvas">
       <Canvas
         orthographic
-        dpr={[1, 1.75]}
+        dpr={[1, theme === 'dark' ? 1.5 : 1.75]}
         frameloop="demand"
         camera={{ far: 140, near: 0.1, position: [20, 14.5, 22], zoom: 58 }}
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
         onCreated={({ gl }) => {
           gl.setClearColor(theme === 'light' ? '#ffffff' : '#0b0d0f');
+          onCanvasReady();
         }}
       >
         <color attach="background" args={[theme === 'light' ? '#ffffff' : '#0b0d0f']} />
         <Suspense fallback={null}>
           <RoomScene />
+          <SceneReady onReady={onSceneReady} />
         </Suspense>
       </Canvas>
     </div>

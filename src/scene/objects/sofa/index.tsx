@@ -12,8 +12,20 @@ export function Sofa() {
   const seat = useRef<Group>(null);
   const startedAt = useRef(0);
   const pulse = useRoomStore((state) => state.objectState.cushionPulse);
+  const curtainsOpen = useRoomStore((state) => state.objectState.curtainsOpen);
+  const theme = useRoomStore((state) => state.theme);
   const interaction = useRoomInteraction('sofa');
   const invalidate = useThree((state) => state.invalidate);
+  const moonGlow =
+    theme === 'dark' && curtainsOpen
+      ? {
+          color: '#8fd3ff',
+          intensity: 1.75,
+          lineWidth: 1.3,
+          opacity: 0.56,
+          scale: 1.008,
+        }
+      : undefined;
 
   useEffect(() => {
     startedAt.current = performance.now();
@@ -33,6 +45,7 @@ export function Sofa() {
       <group ref={seat}>
         <LineBox
           args={[chairLength, 0.24, 1.82]}
+          glow={moonGlow}
           position={[0, 1.02, 0]}
           hovered={interaction.hovered}
         />
@@ -57,6 +70,7 @@ export function Sofa() {
 
       <LineBox
         args={[7.28, 0.24, 0.28]}
+        glow={moonGlow}
         position={[0, 2.42, -0.76]}
         hovered={interaction.hovered}
       />
@@ -71,7 +85,7 @@ export function Sofa() {
         <group key={x}>
           <LineBox args={[0.26, 1.5, 0.3]} position={[x, 1.66, -0.68]} />
           <LineBox args={[0.26, 0.88, 0.3]} position={[x, 1.42, 0.68]} />
-          <LineBox args={[0.32, 0.18, 1.62]} position={[x, 1.78, 0]} />
+          <LineBox args={[0.32, 0.18, 1.62]} glow={moonGlow} position={[x, 1.78, 0]} />
           {[-0.32, 0.04, 0.4].map((z) => (
             <LineBox key={z} args={[0.16, 0.58, 0.14]} position={[x, 1.42, z]} />
           ))}

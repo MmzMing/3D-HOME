@@ -2,14 +2,15 @@ import { Line, Text, useCursor } from '@react-three/drei';
 import { useState } from 'react';
 
 import { siteRecordsConfig } from '@/config';
-import { InteractionProxy, LineBox, LineCylinder, WarmLight } from '@/scene/primitives/line-shape';
+import { InteractionProxy, LineBox, LineCylinder } from '@/scene/primitives/line-shape';
 import { useRoomInteraction } from '@/scene/primitives/use-room-interaction';
 import { useRoomStore } from '@/stores/room-store';
 
 export function DeskLamp() {
   const interaction = useRoomInteraction('desk-lamp');
   const on = useRoomStore((state) => state.objectState.deskLampOn);
-  const color = useRoomStore((state) => (state.theme === 'light' ? '#000000' : '#f3f4f6'));
+  const theme = useRoomStore((state) => state.theme);
+  const color = theme === 'light' ? '#000000' : '#f3f4f6';
   const [icpHovered, setIcpHovered] = useState(false);
   useCursor(icpHovered);
 
@@ -31,6 +32,17 @@ export function DeskLamp() {
         args={[2.26, 0.04, 0.1]}
         position={[0, -0.13, 0.22]}
         accent={on ? 'warm' : undefined}
+        glow={
+          theme === 'dark' && on
+            ? {
+                color: '#ffd166',
+                intensity: 2.8,
+                lineWidth: 1.6,
+                opacity: 0.88,
+                scale: 1.018,
+              }
+            : undefined
+        }
       />
       <Line
         points={[
@@ -69,7 +81,6 @@ export function DeskLamp() {
           ICP
         </Text>
       </group>
-      <WarmLight visible={on} position={[0, -1.38, 0.5]} scale={[1.8, 0.9, 1.25]} />
       <InteractionProxy args={[3, 1.35, 0.9]} position={[0, -0.2, 0]} />
     </group>
   );

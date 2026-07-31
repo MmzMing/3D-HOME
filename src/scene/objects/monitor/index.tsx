@@ -103,9 +103,20 @@ export function Monitor() {
   const interaction = useRoomInteraction('monitor');
   const open = useRoomStore((state) => state.isLinkClusterOpen);
   const theme = useRoomStore((state) => state.theme);
+  const lampOn = useRoomStore((state) => state.objectState.deskLampOn);
   const lineColor = theme === 'light' ? '#000000' : '#f3f4f6';
   const blogCover = linksConfig.find((link) => link.id === 'blog')?.image ?? linksConfig[0]?.image;
   const coverTexture = useTexture(blogCover ?? '/assets/images/links/blog.webp');
+  const riserGlow =
+    theme === 'dark' && lampOn
+      ? {
+          color: '#ffd166',
+          intensity: 2.2,
+          lineWidth: 1.45,
+          opacity: 0.74,
+          scale: 1.012,
+        }
+      : undefined;
 
   return (
     <group position={[-2.25, 2.18, -6.95]} {...interaction.bind}>
@@ -113,14 +124,26 @@ export function Monitor() {
         args={[3.08, 0.16, 0.82]}
         position={[0, 0.38, 0.08]}
         accent={open ? 'active' : undefined}
+        glow={riserGlow}
       />
-      <LineBox args={[0.14, 0.38, 0.66]} position={[-1.22, 0.19, 0.08]} />
-      <LineBox args={[0.14, 0.38, 0.66]} position={[1.22, 0.19, 0.08]} />
+      <LineBox args={[0.14, 0.38, 0.66]} glow={riserGlow} position={[-1.22, 0.19, 0.08]} />
+      <LineBox args={[0.14, 0.38, 0.66]} glow={riserGlow} position={[1.22, 0.19, 0.08]} />
       <LineBox
         args={[2.25, 1.38, 0.12]}
         position={[0, 1.42, 0]}
         hovered={interaction.hovered}
         accent={open ? 'active' : undefined}
+        glow={
+          theme === 'dark'
+            ? {
+                color: '#67e8f9',
+                intensity: open ? 2.7 : 2.4,
+                lineWidth: 1.6,
+                opacity: open ? 0.88 : 0.78,
+                scale: 1.012,
+              }
+            : undefined
+        }
       />
       <mesh position={[0, 1.42, 0.066]}>
         <planeGeometry args={[2.05, 1.16]} />
