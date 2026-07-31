@@ -45,7 +45,13 @@ export function playRandomProfileAudio(enabled: boolean) {
   const clip = clips[Math.floor(Math.random() * clips.length)];
   if (clip === undefined) return;
 
-  const audio = new Audio(clip.track);
+  playProfileAudio(clip.track, enabled);
+}
+
+export function playProfileAudio(track: string, enabled: boolean) {
+  if (!enabled) return;
+
+  const audio = new Audio(track);
   const release = () => {
     activeProfileAudios.delete(audio);
     audio.pause();

@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { FeedDialog } from '@/features/feeds';
+import { DollWords } from '@/features/doll-words';
 import { LinkDialog } from '@/features/links';
 import { MusicBootstrap, MusicDialog, NowPlaying } from '@/features/music';
 import { ProfileDialog } from '@/features/profile';
@@ -32,6 +33,7 @@ function RoomExperience() {
     <main className="app-shell">
       <section className="room-stage" aria-label="可交互三维房间">
         {hasWebGL ? <RoomCanvas /> : <RoomFallback />}
+        <DollWords />
         <WeatherPopover />
         <NowPlaying />
       </section>

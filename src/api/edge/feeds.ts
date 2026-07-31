@@ -12,7 +12,7 @@ import {
 } from './shared.ts';
 import feedsConfigData from '../../config/feeds.json' with { type: 'json' };
 
-const maxFeedBytes = 1_000_000;
+const maxFeedBytes = 5_000_000;
 const maxArticlesPerFeed = 20;
 const maxSelectedFeeds = 5;
 const feedLoadConcurrency = 5;

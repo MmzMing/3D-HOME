@@ -27,6 +27,7 @@ export const roomObjects: readonly RoomObjectDefinition[] = [
   { id: 'coffee', label: '咖啡', zone: 'workspace' },
   { id: 'plant', label: '植物', zone: 'workspace' },
   { id: 'profile-doll', label: '中央玩偶', zone: 'overview' },
+  { id: 'doll-eraser', label: '文字清除方块', zone: 'overview' },
 ] as const;
 
 function sound(kind: 'click' | 'chime' | 'soft' | 'switch' = 'click') {
@@ -146,6 +147,8 @@ export function activateRoomObject(id: RoomObjectId) {
       break;
     case 'profile-doll':
       playRandomProfileAudio(true);
+      break;
+    case 'doll-eraser':
       break;
   }
 }

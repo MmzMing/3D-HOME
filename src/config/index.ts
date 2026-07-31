@@ -46,6 +46,11 @@ const profileSchema = z.object({
       .array(z.object({ phrase: z.string(), track: localAsset }))
       .optional()
       .default([]),
+    dollFonts: z
+      .array(z.object({ family: z.string().min(1) }))
+      .min(1)
+      .optional()
+      .default([{ family: 'Ark Pixel' }]),
     role: z.string().min(1),
     sticker: localAsset,
   }),

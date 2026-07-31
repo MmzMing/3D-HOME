@@ -30,7 +30,8 @@ export type RoomObjectId =
   | 'bed'
   | 'coffee'
   | 'plant'
-  | 'profile-doll';
+  | 'profile-doll'
+  | 'doll-eraser';
 
 export interface RoomObjectDefinition {
   id: RoomObjectId;

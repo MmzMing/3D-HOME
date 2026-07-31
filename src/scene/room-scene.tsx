@@ -2,6 +2,7 @@ import { Bookshelf } from '@/scene/objects/bookshelf';
 import { AirConditioner } from '@/scene/objects/air-conditioner';
 import { Bed } from '@/scene/objects/bed';
 import { DeskFan } from '@/scene/objects/desk-fan';
+import { DollWordEraser } from '@/scene/objects/doll-eraser';
 import { Coffee } from '@/scene/objects/coffee';
 import { CoffeeTable } from '@/scene/objects/coffee-table';
 import { Desk } from '@/scene/objects/desk';
@@ -43,6 +44,7 @@ export function RoomScene() {
         <Plant />
         <Portrait />
         <ProfileDoll />
+        <DollWordEraser />
         <WallSwitch />
         <Door />
         <Window />

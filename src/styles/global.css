@@ -4,6 +4,24 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'ZCOOL KuaiLe';
+  src: url('/assets/fonts/zcool-kuaile.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ZCOOL QingKe HuangYou';
+  src: url('/assets/fonts/zcool-qingke-huangyou.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ZCOOL XiaoWei';
+  src: url('/assets/fonts/zcool-xiaowei.ttf') format('truetype');
+  font-display: swap;
+}
+
 *,
 *::before,
 *::after {

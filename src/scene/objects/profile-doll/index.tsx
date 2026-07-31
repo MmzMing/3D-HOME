@@ -4,8 +4,11 @@ import gsap from 'gsap';
 import { useEffect, useRef, useState } from 'react';
 import type { Group } from 'three';
 
+import { profileConfig } from '@/config';
 import { InteractionProxy } from '@/scene/primitives/line-shape';
 import { useRoomInteraction } from '@/scene/primitives/use-room-interaction';
+import { useRoomStore } from '@/stores/room-store';
+import { playProfileAudio } from '@/utils/room-audio';
 
 const dollImage = '/assets/images/profile/home2.webp';
 
@@ -13,6 +16,8 @@ export function ProfileDoll() {
   const animated = useRef<Group>(null);
   const [pressed, setPressed] = useState(false);
   const interaction = useRoomInteraction('profile-doll');
+  const releaseDollWords = useRoomStore((state) => state.releaseDollWords);
+  const soundEnabled = useRoomStore((state) => state.isSoundEnabled);
   const texture = useTexture(dollImage);
   const invalidate = useThree((state) => state.invalidate);
 
@@ -37,6 +42,14 @@ export function ProfileDoll() {
       <group
         ref={animated}
         {...interaction.bind}
+        onClick={(event) => {
+          event.stopPropagation();
+          const phrases = profileConfig.intro.audioPhrases;
+          const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+          if (phrase === undefined) return;
+          playProfileAudio(phrase.track, soundEnabled);
+          releaseDollWords(phrase.phrase);
+        }}
         onPointerDown={(event) => {
           event.stopPropagation();
           setPressed(true);

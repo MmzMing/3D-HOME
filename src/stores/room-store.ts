@@ -6,6 +6,9 @@ import { readStorage, writeStorage } from '@/utils/storage';
 
 interface RoomState {
   cameraZone: CameraZone;
+  dollWordBurst: { id: number; phrase: string } | null;
+  dollWordClearRevision: number;
+  dollWordCount: number;
   hoveredObject: string | null;
   isLinkClusterOpen: boolean;
   isObjectMenuOpen: boolean;
@@ -18,6 +21,9 @@ interface RoomState {
   selectedLinkId: string | null;
   theme: ThemeMode;
   closePanel: () => void;
+  clearDollWords: () => void;
+  releaseDollWords: (phrase: string) => void;
+  setDollWordCount: (count: number) => void;
   openFeed: (feedId: string) => void;
   openLink: (linkId: string) => void;
   openPanel: (panel: Exclude<PanelId, 'feed' | 'link' | null>) => void;
@@ -61,6 +67,9 @@ const initialSound =
 
 export const useRoomStore = create<RoomState>((set) => ({
   cameraZone: appConfig.defaultCameraZone,
+  dollWordBurst: null,
+  dollWordClearRevision: 0,
+  dollWordCount: 0,
   hoveredObject: null,
   isLinkClusterOpen: false,
   isObjectMenuOpen: false,
@@ -73,6 +82,14 @@ export const useRoomStore = create<RoomState>((set) => ({
   selectedLinkId: null,
   theme: initialTheme,
   closePanel: () => set({ panel: null, selectedFeedId: null, selectedLinkId: null }),
+  clearDollWords: () =>
+    set((state) => ({ dollWordClearRevision: state.dollWordClearRevision + 1, dollWordCount: 0 })),
+  releaseDollWords: (phrase) =>
+    set((state) => ({
+      dollWordBurst: { id: (state.dollWordBurst?.id ?? 0) + 1, phrase },
+    })),
+  setDollWordCount: (dollWordCount) =>
+    set({ dollWordCount: Math.max(0, Math.floor(dollWordCount)) }),
   openFeed: (selectedFeedId) => set({ panel: 'feed', selectedFeedId }),
   openLink: (selectedLinkId) => set({ panel: 'link', selectedLinkId }),
   openPanel: (panel) => set({ panel }),

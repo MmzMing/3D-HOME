@@ -32,6 +32,12 @@
       { "phrase": "菲比啾比(╹ڡ╹ )", "track": "/assets/audio/profile/phoebe_chubby_6.mp3" },
       { "phrase": "菲比啾比(*^▽^*)", "track": "/assets/audio/profile/phoebe_chubby_7.mp3" }
     ],
+    "dollFonts": [
+      { "family": "Ark Pixel" },
+      { "family": "ZCOOL KuaiLe" },
+      { "family": "ZCOOL QingKe HuangYou" },
+      { "family": "ZCOOL XiaoWei" }
+    ],
     "role": "全干工程师",
     "sticker": "/assets/images/profile/home2.webp"
   },
