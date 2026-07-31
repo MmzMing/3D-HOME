@@ -1,20 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import {
   ListMusic,
+  Music2,
   Pause,
   Play,
-  Repeat,
+  Repeat1,
+  Repeat2,
   Shuffle,
   SkipBack,
   SkipForward,
   Volume2,
+  X,
 } from 'lucide-react';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { getMusic } from '@/api';
 import { TrackCard } from '@/components/cards/track-card';
-import { ModalShell } from '@/components/common/modal-shell';
-import { ErrorStatus } from '@/components/common/status-view';
 import { usePlayerStore } from '@/stores/player-store';
 import { useRoomStore } from '@/stores/room-store';
 
@@ -43,153 +44,313 @@ export function MusicBootstrap() {
   return null;
 }
 
-export function NowPlaying() {
-  const status = usePlayerStore((state) => state.status);
-  const currentIndex = usePlayerStore((state) => state.currentIndex);
-  const tracks = usePlayerStore((state) => state.tracks);
-  const openPanel = useRoomStore((state) => state.openPanel);
-  const track = tracks[currentIndex];
-  if (status === 'idle' || status === 'paused' || track === undefined) return null;
-  return (
-    <div className="now-playing" data-status={status}>
-      <span>
-        <small>NOW PLAYING</small>
-        <strong>{track.title}</strong>
-      </span>
-      <button
-        type="button"
-        className="icon-button"
-        aria-label="打开播放列表"
-        title="播放列表"
-        onClick={() => openPanel('music')}
-      >
-        <ListMusic aria-hidden="true" size={19} />
-      </button>
-    </div>
-  );
+const modeLabels = {
+  list: '列表循环',
+  loop: '单曲循环',
+  shuffle: '随机播放',
+} as const;
+
+const AUTO_COLLAPSE_DELAY = 5_000;
+
+function hasHoverPointer() {
+  return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 }
 
-export function MusicDialog() {
+export function FloatingMusicPlayer() {
+  const player = usePlayerStore();
   const panel = useRoomStore((state) => state.panel);
   const closePanel = useRoomStore((state) => state.closePanel);
-  const player = usePlayerStore();
+  const openPanel = useRoomStore((state) => state.openPanel);
+  const [isCollapsed, setCollapsed] = useState(false);
+  const [isVolumeOpen, setVolumeOpen] = useState(false);
+  const collapseTimerRef = useRef<number | null>(null);
+  const playerStackRef = useRef<HTMLDivElement>(null);
+  const volumeRef = useRef<HTMLDivElement>(null);
   const track = player.tracks[player.currentIndex];
   const isPlaying = player.status === 'playing' || player.status === 'loading';
-  const ModeIcon = player.mode === 'shuffle' ? Shuffle : Repeat;
+  const isPlaylistOpen = panel === 'music';
+  const modeLabel = modeLabels[player.mode];
+  const volumePercent = Math.round(player.volume * 100);
+  const ModeIcon = player.mode === 'shuffle' ? Shuffle : player.mode === 'loop' ? Repeat1 : Repeat2;
+  const isVisuallyCollapsed = isCollapsed && !isPlaylistOpen && !isVolumeOpen;
+
+  const clearAutoCollapse = useCallback(() => {
+    if (collapseTimerRef.current === null) return;
+    window.clearTimeout(collapseTimerRef.current);
+    collapseTimerRef.current = null;
+  }, []);
+
+  const scheduleAutoCollapse = useCallback(() => {
+    clearAutoCollapse();
+    if (!player.hasStarted || isPlaylistOpen || isVolumeOpen) return;
+    collapseTimerRef.current = window.setTimeout(() => {
+      setCollapsed(true);
+      collapseTimerRef.current = null;
+    }, AUTO_COLLAPSE_DELAY);
+  }, [clearAutoCollapse, isPlaylistOpen, isVolumeOpen, player.hasStarted]);
+
+  const closePlaylistAndKeepExpanded = useCallback(() => {
+    setCollapsed(false);
+    closePanel();
+  }, [closePanel]);
+
+  useEffect(() => {
+    if (!isVolumeOpen) return;
+    const closeVolume = (event: PointerEvent) => {
+      if (!volumeRef.current?.contains(event.target as Node)) setVolumeOpen(false);
+    };
+    document.addEventListener('pointerdown', closeVolume);
+    return () => document.removeEventListener('pointerdown', closeVolume);
+  }, [isVolumeOpen]);
+
+  useEffect(() => {
+    if (!isPlaylistOpen) return;
+    const closePlaylist = (event: PointerEvent) => {
+      if (!playerStackRef.current?.contains(event.target as Node)) {
+        closePlaylistAndKeepExpanded();
+      }
+    };
+    document.addEventListener('pointerdown', closePlaylist);
+    return () => document.removeEventListener('pointerdown', closePlaylist);
+  }, [closePlaylistAndKeepExpanded, isPlaylistOpen]);
+
+  useEffect(() => {
+    const closeFloatingControls = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      setVolumeOpen(false);
+      if (isPlaylistOpen) closePlaylistAndKeepExpanded();
+    };
+    document.addEventListener('keydown', closeFloatingControls);
+    return () => document.removeEventListener('keydown', closeFloatingControls);
+  }, [closePlaylistAndKeepExpanded, isPlaylistOpen]);
+
+  useEffect(() => {
+    if (!player.hasStarted || isPlaylistOpen || isVolumeOpen) {
+      clearAutoCollapse();
+      return;
+    }
+    scheduleAutoCollapse();
+    return clearAutoCollapse;
+  }, [clearAutoCollapse, isPlaylistOpen, isVolumeOpen, player.hasStarted, scheduleAutoCollapse]);
+
+  if (!player.hasStarted && !isPlaylistOpen) return null;
+
   return (
-    <ModalShell
-      open={panel === 'music'}
-      onOpenChange={(open) => {
-        if (!open) closePanel();
-      }}
-      title="留声机"
-      description="播放列表与唱片控制"
-    >
-      {track === undefined ? (
-        <ErrorStatus message={player.error ?? '播放列表暂不可用，请检查 EdgeOne 音乐接口。'} />
-      ) : (
-        <div className="music-layout">
-          <section className="music-player" aria-label="播放器">
-            <div className="music-heading">
-              {track.cover === undefined ? (
-                <span className="music-cover-placeholder">
-                  <ListMusic aria-hidden="true" size={30} />
-                </span>
-              ) : (
-                <img src={track.cover} alt="" />
-              )}
-              <div>
-                <p className="eyebrow">NOW PLAYING</p>
-                <h2>{track.title}</h2>
-                <p>{track.artist}</p>
-              </div>
+    <>
+      <div
+        ref={playerStackRef}
+        className="floating-player-stack"
+        data-collapsed={isVisuallyCollapsed ? 'true' : 'false'}
+        data-playlist-open={isPlaylistOpen ? 'true' : 'false'}
+      >
+        <section
+          className="floating-player"
+          aria-hidden={isVisuallyCollapsed}
+          aria-label="音乐播放器"
+          data-status={player.status}
+          inert={isVisuallyCollapsed ? true : undefined}
+          onPointerDown={() => {
+            if (!hasHoverPointer()) scheduleAutoCollapse();
+          }}
+          onPointerEnter={() => {
+            if (hasHoverPointer()) clearAutoCollapse();
+          }}
+          onPointerLeave={() => {
+            if (hasHoverPointer()) scheduleAutoCollapse();
+          }}
+        >
+          {track?.cover === undefined ? (
+            <span className="floating-player-cover-placeholder">
+              <Music2 aria-hidden="true" size={28} />
+            </span>
+          ) : (
+            <img className="floating-player-cover" src={track.cover} alt={`${track.title} 封面`} />
+          )}
+
+          <div className="floating-player-body">
+            <div className="floating-track-meta" aria-live="polite">
+              <strong>{track?.title ?? '暂无可播放歌曲'}</strong>
+              <span>{track?.artist ?? '音乐数据暂不可用'}</span>
             </div>
-            <label className="range-control">
-              <span>播放进度</span>
+
+            <label className="floating-progress">
+              <span className="visually-hidden">播放进度</span>
+              <time>{formatTime(player.progress)}</time>
               <input
                 type="range"
                 min={0}
                 max={Math.max(1, player.duration)}
                 step={0.1}
                 value={Math.min(player.progress, Math.max(1, player.duration))}
+                disabled={track === undefined}
                 onChange={(event) => player.seek(Number(event.currentTarget.value))}
               />
-              <output>
-                {formatTime(player.progress)} / {formatTime(player.duration)}
-              </output>
+              <time>{formatTime(player.duration)}</time>
             </label>
-            <div className="player-controls">
+
+            <div className="floating-player-controls">
               <button
                 type="button"
-                className="icon-button"
-                aria-label={`播放模式：${player.mode}`}
-                title="切换播放模式"
+                className="floating-player-button"
+                aria-label={`播放模式：${modeLabel}`}
+                title={`播放模式：${modeLabel}`}
+                disabled={track === undefined}
                 onClick={player.cycleMode}
               >
                 <ModeIcon aria-hidden="true" size={19} />
               </button>
               <button
                 type="button"
-                className="icon-button"
+                className="floating-player-button"
                 aria-label="上一首"
+                title="上一首"
+                disabled={track === undefined}
                 onClick={player.previous}
               >
-                <SkipBack aria-hidden="true" size={21} />
+                <SkipBack aria-hidden="true" size={20} />
               </button>
               <button
                 type="button"
-                className="play-button"
+                className="floating-player-button floating-player-play"
                 aria-label={isPlaying ? '暂停' : '播放'}
+                title={isPlaying ? '暂停' : '播放'}
+                disabled={track === undefined}
                 onClick={isPlaying ? player.pause : player.play}
               >
                 {isPlaying ? (
-                  <Pause aria-hidden="true" size={22} />
+                  <Pause aria-hidden="true" size={21} />
                 ) : (
-                  <Play aria-hidden="true" size={22} />
+                  <Play aria-hidden="true" size={21} />
                 )}
               </button>
               <button
                 type="button"
-                className="icon-button"
+                className="floating-player-button"
                 aria-label="下一首"
+                title="下一首"
+                disabled={track === undefined}
                 onClick={player.next}
               >
-                <SkipForward aria-hidden="true" size={21} />
+                <SkipForward aria-hidden="true" size={20} />
+              </button>
+              <div className="floating-player-volume" ref={volumeRef}>
+                {isVolumeOpen ? (
+                  <div className="volume-popover" id="player-volume-control">
+                    <label>
+                      <span className="visually-hidden">音量</span>
+                      <input
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        value={player.volume}
+                        onChange={(event) => player.setVolume(Number(event.currentTarget.value))}
+                      />
+                    </label>
+                    <output>{volumePercent}%</output>
+                  </div>
+                ) : null}
+                <button
+                  type="button"
+                  className="floating-player-button"
+                  aria-label="调节音量"
+                  aria-controls="player-volume-control"
+                  aria-expanded={isVolumeOpen}
+                  title={`音量：${String(volumePercent)}%`}
+                  onClick={() => setVolumeOpen((open) => !open)}
+                >
+                  <Volume2 aria-hidden="true" size={19} />
+                </button>
+              </div>
+              <button
+                type="button"
+                className="floating-player-button"
+                aria-label={isPlaylistOpen ? '收起播放列表' : '展开播放列表'}
+                aria-expanded={isPlaylistOpen}
+                aria-controls="floating-playlist"
+                title="播放列表"
+                onClick={() => {
+                  setCollapsed(false);
+                  if (isPlaylistOpen) closePlaylistAndKeepExpanded();
+                  else openPanel('music');
+                }}
+              >
+                <ListMusic aria-hidden="true" size={20} />
               </button>
             </div>
-            <label className="range-control volume-control">
-              <Volume2 aria-hidden="true" size={17} />
-              <input
-                type="range"
-                min={0}
-                max={1}
-                step={0.01}
-                value={player.volume}
-                onChange={(event) => player.setVolume(Number(event.currentTarget.value))}
-              />
-              <output>{Math.round(player.volume * 100)}%</output>
-            </label>
+
             {player.error === null ? null : (
-              <p className="feature-error" role="status">
+              <p className="floating-player-error" role="status">
                 {player.error}
               </p>
             )}
+          </div>
+        </section>
+
+        {isPlaylistOpen ? (
+          <section
+            className="floating-playlist"
+            id="floating-playlist"
+            aria-labelledby="playlist-title"
+          >
+            <header>
+              <div>
+                <h2 id="playlist-title">播放列表</h2>
+                <span>{player.tracks.length} 首歌曲</span>
+              </div>
+              <button
+                type="button"
+                className="floating-player-button"
+                aria-label="收起播放列表"
+                title="收起播放列表"
+                onClick={closePlaylistAndKeepExpanded}
+              >
+                <X aria-hidden="true" size={19} />
+              </button>
+            </header>
+            {player.tracks.length === 0 ? (
+              <p className="floating-playlist-empty">
+                {player.error ?? '播放列表暂不可用，请稍后重试。'}
+              </p>
+            ) : (
+              <div className="floating-playlist-tracks">
+                {player.tracks.map((item, index) => (
+                  <TrackCard
+                    key={item.id}
+                    track={item}
+                    active={index === player.currentIndex}
+                    onSelect={() => player.selectTrack(index)}
+                  />
+                ))}
+              </div>
+            )}
           </section>
-          <section className="playlist" aria-labelledby="playlist-title">
-            <h2 id="playlist-title">播放列表</h2>
-            <div>
-              {player.tracks.map((item, index) => (
-                <TrackCard
-                  key={item.id}
-                  track={item}
-                  active={index === player.currentIndex}
-                  onSelect={() => player.selectTrack(index)}
-                />
-              ))}
-            </div>
-          </section>
-        </div>
-      )}
-    </ModalShell>
+        ) : null}
+      </div>
+
+      <button
+        type="button"
+        className="floating-record"
+        aria-label="展开音乐播放器"
+        data-playing={isPlaying ? 'true' : 'false'}
+        data-visible={isVisuallyCollapsed ? 'true' : 'false'}
+        title="展开音乐播放器"
+        onClick={() => {
+          setCollapsed(false);
+          scheduleAutoCollapse();
+        }}
+      >
+        <span className="floating-record-art" aria-hidden="true">
+          {track?.cover === undefined ? (
+            <span className="floating-record-placeholder">
+              <Music2 size={24} />
+            </span>
+          ) : (
+            <img src={track.cover} alt="" />
+          )}
+        </span>
+        <span className="floating-record-center" aria-hidden="true" />
+      </button>
+    </>
   );
 }

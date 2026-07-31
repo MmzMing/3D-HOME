@@ -6,7 +6,7 @@ import { FeedDialog } from '@/features/feeds';
 import { DoorExitDialog } from '@/features/door-exit';
 import { DollWords } from '@/features/doll-words';
 import { LinkDialog } from '@/features/links';
-import { MusicBootstrap, MusicDialog, NowPlaying } from '@/features/music';
+import { FloatingMusicPlayer, MusicBootstrap } from '@/features/music';
 import { ProfileDialog } from '@/features/profile';
 import { SearchDialog } from '@/features/search';
 import { WeatherPopover } from '@/features/weather';
@@ -58,14 +58,13 @@ function RoomExperience() {
         )}
         <DollWords />
         <WeatherPopover />
-        <NowPlaying />
+        <FloatingMusicPlayer />
       </section>
 
       <ProfileDialog />
       <DoorExitDialog />
       <LinkDialog />
       <FeedDialog />
-      <MusicDialog />
       <SearchDialog />
       <MusicBootstrap />
       <RoomLoader canvasReady={canvasReady} onReveal={revealRoom} sceneReady={sceneReady} />

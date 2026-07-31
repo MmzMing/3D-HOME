@@ -1,4 +1,4 @@
-import { Text, useCursor } from '@react-three/drei';
+import { Image, Text, useCursor } from '@react-three/drei';
 import { useState } from 'react';
 
 import { siteRecordsConfig } from '@/config';
@@ -7,23 +7,19 @@ import { useRoomStore } from '@/stores/room-store';
 const pixelFont = '/assets/fonts/ark-pixel-12px-proportional-zh-cn.woff';
 
 interface RecordLinkProps {
+  icon?: string;
   label: string;
   position: [number, number, number];
   url: string;
 }
 
-function RecordLink({ label, position, url }: RecordLinkProps) {
+function RecordLink({ icon, label, position, url }: RecordLinkProps) {
   const [hovered, setHovered] = useState(false);
   const color = useRoomStore((state) => (state.theme === 'light' ? '#000000' : '#f3f4f6'));
   useCursor(hovered);
 
   return (
-    <Text
-      anchorX="left"
-      anchorY="middle"
-      color={hovered ? '#0e7490' : color}
-      font={pixelFont}
-      fontSize={0.24}
+    <group
       position={position}
       onClick={(event) => {
         event.stopPropagation();
@@ -38,8 +34,26 @@ function RecordLink({ label, position, url }: RecordLinkProps) {
         setHovered(true);
       }}
     >
-      {label}
-    </Text>
+      {icon === undefined ? null : (
+        <Image
+          url={icon}
+          position={[0.11, 0, 0.006]}
+          scale={[0.22, 0.22]}
+          toneMapped={false}
+          transparent
+        />
+      )}
+      <Text
+        anchorX="left"
+        anchorY="middle"
+        color={hovered ? '#0e7490' : color}
+        font={pixelFont}
+        fontSize={0.24}
+        position={[icon === undefined ? 0 : 0.27, 0, 0]}
+      >
+        {label}
+      </Text>
+    </group>
   );
 }
 
@@ -52,6 +66,7 @@ export function SiteRecords() {
         url={siteRecordsConfig.icp.url}
       />
       <RecordLink
+        icon={siteRecordsConfig.police.icon}
         label={siteRecordsConfig.police.label}
         position={[0, -0.24, 0]}
         url={siteRecordsConfig.police.url}

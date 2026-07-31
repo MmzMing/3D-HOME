@@ -27,15 +27,19 @@
     display: none;
   }
 
-  .music-layout {
-    grid-template-columns: 1fr;
+  .floating-player-stack {
+    --player-collapse-x: calc(34px - 50%);
+
+    bottom: 28px;
+    left: 30px;
+    width: min(560px, calc(100vw - 230px));
+    transform: none;
   }
 
-  .playlist {
-    border-top: 1px solid var(--border);
-    border-left: 0;
-    padding-top: 20px;
-    padding-left: 0;
+  .floating-record {
+    right: auto;
+    bottom: 28px;
+    left: 30px;
   }
 }
 
@@ -106,12 +110,63 @@
     width: auto;
   }
 
-  .now-playing {
+  .floating-player-stack {
+    --player-collapse-x: calc(32px - 50%);
+    --player-collapse-y: 14px;
+
     right: 12px;
     bottom: 82px;
     left: 12px;
-    min-width: 0;
-    transform: none;
+    width: auto;
+    max-height: calc(100dvh - 96px);
+  }
+
+  .floating-record {
+    bottom: 82px;
+    left: 12px;
+    width: 64px;
+    height: 64px;
+  }
+
+  .floating-record-art,
+  .floating-record-art img,
+  .floating-record-placeholder {
+    width: 56px;
+    height: 56px;
+  }
+
+  .floating-player {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 9px;
+    padding: 8px;
+  }
+
+  .floating-player-cover,
+  .floating-player-cover-placeholder {
+    width: 76px;
+    height: 76px;
+  }
+
+  .floating-track-meta strong {
+    font-size: 14px;
+  }
+
+  .floating-progress {
+    grid-template-columns: 32px minmax(0, 1fr) 32px;
+    gap: 4px;
+  }
+
+  .floating-player-controls {
+    justify-content: space-between;
+    gap: 0;
+  }
+
+  .floating-player-volume {
+    display: none;
+  }
+
+  .floating-playlist-tracks {
+    max-height: min(44dvh, calc(100dvh - 224px));
   }
 
   .dialog-content,
@@ -184,21 +239,6 @@
 
   .link-detail-card > img {
     max-height: 180px;
-  }
-
-  .music-heading {
-    grid-template-columns: 84px 1fr;
-    gap: 14px;
-  }
-
-  .music-heading img,
-  .music-cover-placeholder {
-    width: 84px;
-    height: 84px;
-  }
-
-  .music-heading h2 {
-    font-size: 18px;
   }
 
   .search-scopes {

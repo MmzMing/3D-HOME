@@ -18,6 +18,7 @@ interface PlayerState {
   currentIndex: number;
   duration: number;
   error: string | null;
+  hasStarted: boolean;
   mode: PlaybackMode;
   progress: number;
   status: PlaybackStatus;
@@ -55,7 +56,13 @@ export const usePlayerStore = create<PlayerState>((set, get) => {
     const player = element();
     player.src = track.audio;
     player.load();
-    set({ currentIndex: index, error: null, progress: 0, status: autoplay ? 'loading' : 'paused' });
+    set({
+      currentIndex: index,
+      error: null,
+      hasStarted: autoplay || get().hasStarted,
+      progress: 0,
+      status: autoplay ? 'loading' : 'paused',
+    });
     if (autoplay) {
       void player
         .play()
@@ -77,6 +84,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => {
     currentIndex: 0,
     duration: 0,
     error: null,
+    hasStarted: false,
     mode:
       musicConfig.playMode === 'one'
         ? 'loop'
@@ -112,12 +120,14 @@ export const usePlayerStore = create<PlayerState>((set, get) => {
     pause: () => element().pause(),
     play: () => {
       if (get().tracks.length === 0) {
-        set({ error: '播放列表暂不可用。', status: 'error' });
+        set({ error: '播放列表暂不可用。', hasStarted: true, status: 'error' });
         return;
       }
-      if (element().src.length === 0) select(get().currentIndex, true);
+      const player = element();
+      set({ error: null, hasStarted: true, status: 'loading' });
+      if (player.src.length === 0) select(get().currentIndex, true);
       else
-        void element()
+        void player
           .play()
           .catch(() => set({ error: '浏览器阻止了播放，请再次点击。', status: 'error' }));
     },
@@ -133,7 +143,15 @@ export const usePlayerStore = create<PlayerState>((set, get) => {
     selectTrack: (index) => select(index, true),
     setTracks: (tracks) => {
       element().pause();
-      set({ currentIndex: 0, duration: 0, error: null, progress: 0, status: 'idle', tracks });
+      set({
+        currentIndex: 0,
+        duration: 0,
+        error: null,
+        hasStarted: false,
+        progress: 0,
+        status: 'idle',
+        tracks,
+      });
       if (tracks.length > 0) select(0, false);
     },
     setVolume: (volume) => {
