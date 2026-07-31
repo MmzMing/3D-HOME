@@ -19,6 +19,7 @@ export type RoomObjectId =
   | 'mouse'
   | 'wall-switch'
   | 'desk-lamp'
+  | 'bedside-lamp'
   | 'door'
   | 'window'
   | 'curtains'
@@ -42,6 +43,7 @@ export interface RoomObjectDefinition {
 
 export interface RoomObjectState {
   airConditionerOn: boolean;
+  bedsideLampOn: boolean;
   chairOut: boolean;
   clockRunning: boolean;
   coffeeSteaming: boolean;

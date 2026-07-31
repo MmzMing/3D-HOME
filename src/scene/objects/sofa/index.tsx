@@ -41,7 +41,7 @@ export function Sofa() {
   });
 
   return (
-    <group position={[-8.48, 0, 0.22]} rotation={[0, Math.PI / 2, 0]} {...interaction.bind}>
+    <group position={[-8.48, 0, 0.22]} rotation={[0, Math.PI / 2, 0]}>
       <group ref={seat}>
         <LineBox
           args={[chairLength, 0.24, 1.82]}
@@ -92,7 +92,9 @@ export function Sofa() {
         </group>
       ))}
 
-      <InteractionProxy args={[7.9, 2.82, 2.24]} position={[0, 1.35, 0]} />
+      <group {...interaction.bind}>
+        <InteractionProxy args={[7.36, 0.34, 1.72]} position={[0, 1.04, 0]} />
+      </group>
     </group>
   );
 }

@@ -46,6 +46,7 @@ interface RoomState {
 
 const initialObjectState: RoomObjectState = {
   airConditionerOn: false,
+  bedsideLampOn: false,
   chairOut: false,
   clockRunning: true,
   coffeeSteaming: true,

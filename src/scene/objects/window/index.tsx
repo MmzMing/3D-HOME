@@ -55,13 +55,30 @@ function MoonDust({ active, reducedMotion }: { active: boolean; reducedMotion: b
   const particles = useMemo(() => {
     const positions = new Float32Array(count * 3);
     const phases = new Float32Array(count);
+    const beamStartX = -9.35;
+    const beamEndX = -3.25;
+    const floorY = 0.22;
+    const sourceTopY = 5.45;
+    const sourceBottomY = 2.35;
+    const sourceCenterZ = 0.15;
+    const sourceHalfWidthZ = 3.85;
+
     for (let index = 0; index < count; index += 1) {
-      const progress = (index + 0.5) / count;
-      const spread = 0.45 + progress * 2.65;
-      positions[index * 3] = -9.25 + progress * 6.35 + (seeded(index, 1) - 0.5) * 0.45;
-      positions[index * 3 + 1] = 4.3 * (1 - progress) + 0.25 + (seeded(index, 2) - 0.5) * 0.9;
-      positions[index * 3 + 2] = -0.1 - progress * 1.45 + (seeded(index, 3) - 0.5) * spread;
-      phases[index] = seeded(index, 4) * Math.PI * 2;
+      // Keep depth evenly covered while randomizing each particle across the
+      // full window opening, so the dust does not form a central streak.
+      const progress = MathUtils.clamp((index + seeded(index, 1)) / count, 0.02, 0.98);
+      const sourceY = MathUtils.lerp(sourceBottomY, sourceTopY, seeded(index, 2));
+      const lateralSpread = sourceHalfWidthZ * (0.96 - progress * 0.16);
+      const verticalJitter = (seeded(index, 4) - 0.5) * (0.42 + progress * 0.72);
+
+      positions[index * 3] = MathUtils.lerp(beamStartX, beamEndX, progress);
+      positions[index * 3 + 1] = MathUtils.clamp(
+        MathUtils.lerp(sourceY, floorY, progress) + verticalJitter,
+        floorY,
+        sourceTopY,
+      );
+      positions[index * 3 + 2] = sourceCenterZ + (seeded(index, 3) - 0.5) * lateralSpread * 2;
+      phases[index] = seeded(index, 5) * Math.PI * 2;
     }
     return { phases, positions };
   }, [count]);

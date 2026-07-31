@@ -196,6 +196,29 @@
     padding: 18px 16px max(20px, env(safe-area-inset-bottom));
   }
 
+  .weather-forecast {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+
+  .weather-forecast li {
+    min-height: 40px;
+    grid-template-columns: 76px 25px minmax(0, 1fr);
+    align-content: center;
+    justify-items: start;
+    gap: 12px;
+  }
+
+  .weather-forecast time {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .weather-forecast-temperature {
+    justify-self: end;
+  }
+
   .profile-card-heading {
     grid-template-columns: 78px 1fr;
     gap: 14px;
@@ -264,6 +287,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .weather-icon[data-effect] svg {
+    animation: none;
+  }
+
   *,
   *::before,
   *::after {

@@ -15,6 +15,7 @@ export const roomObjects: readonly RoomObjectDefinition[] = [
   { id: 'mouse', label: '显示器电源鼠标', zone: 'workspace' },
   { id: 'wall-switch', label: '主题开关', zone: 'workspace' },
   { id: 'desk-lamp', label: '主台灯', zone: 'workspace' },
+  { id: 'bedside-lamp', label: '床头灯', zone: 'lounge' },
   { id: 'door', label: '门户', zone: 'overview' },
   { id: 'window', label: '窗户', zone: 'workspace' },
   { id: 'curtains', label: '窗帘', zone: 'lounge' },
@@ -100,11 +101,15 @@ export function activateRoomObject(id: RoomObjectId) {
     }
     case 'wall-switch':
       room.toggleTheme();
-      sound('switch');
+      playObjectSound('light-switch', room.isSoundEnabled);
       break;
     case 'desk-lamp':
       room.patchObjectState({ deskLampOn: !state.deskLampOn });
-      sound('switch');
+      playObjectSound('light-switch', room.isSoundEnabled);
+      break;
+    case 'bedside-lamp':
+      room.patchObjectState({ bedsideLampOn: !state.bedsideLampOn });
+      playObjectSound('light-switch', room.isSoundEnabled);
       break;
     case 'door':
       if (state.doorOpen) {
@@ -147,7 +152,7 @@ export function activateRoomObject(id: RoomObjectId) {
       break;
     case 'office-chair':
       room.patchObjectState({ chairOut: !state.chairOut });
-      sound('soft');
+      playObjectSound('office-chair-roll', room.isSoundEnabled);
       break;
     case 'sofa':
       room.pulseObject('cushionPulse');
@@ -155,7 +160,6 @@ export function activateRoomObject(id: RoomObjectId) {
       break;
     case 'bed':
       room.patchObjectState({ quiltFolded: !state.quiltFolded });
-      sound('soft');
       break;
     case 'coffee':
       room.patchObjectState({ coffeeSteaming: !state.coffeeSteaming });

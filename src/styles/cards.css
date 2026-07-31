@@ -636,8 +636,149 @@
   font-weight: 700;
 }
 
+.weather-forecast {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+  padding: 0;
+  margin: 0 0 14px;
+  list-style: none;
+}
+
+.weather-forecast li {
+  display: grid;
+  min-width: 0;
+  min-height: 94px;
+  align-content: center;
+  justify-items: center;
+  gap: 6px;
+  color: var(--muted);
+}
+
+.weather-forecast time {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+}
+
+.weather-forecast time span {
+  font-size: 11px;
+}
+
+.weather-forecast time strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.weather-forecast-icon,
+.weather-icon {
+  display: inline-grid;
+  place-items: center;
+}
+
+.weather-forecast-icon {
+  color: var(--muted);
+}
+
+.weather-icon svg {
+  transform-origin: center;
+}
+
+.weather-icon[data-effect='sun'] svg {
+  animation: weather-icon-sun 5.4s linear infinite;
+}
+
+.weather-icon[data-effect='cloud'] svg {
+  animation: weather-icon-cloud 3.2s ease-in-out infinite alternate;
+}
+
+.weather-icon[data-effect='rain'] svg {
+  animation: weather-icon-rain 1.4s ease-in-out infinite;
+}
+
+.weather-icon[data-effect='thunder'] svg {
+  animation: weather-icon-thunder 2.8s ease-in-out infinite;
+}
+
+.weather-icon[data-effect='snow'] svg {
+  animation: weather-icon-snow 4s linear infinite;
+}
+
+.weather-icon[data-effect='fog'] svg {
+  animation: weather-icon-fog 4.4s ease-in-out infinite alternate;
+}
+
+.weather-forecast-temperature {
+  display: inline-flex;
+  gap: 3px;
+  font-size: 11px;
+}
+
+.weather-forecast-temperature b {
+  color: var(--ink);
+}
+
+.weather-forecast-temperature i {
+  color: var(--muted);
+  font-style: normal;
+}
+
+.weather-forecast li[data-today='true'] time,
+.weather-forecast li[data-today='true'] time strong,
+.weather-forecast li[data-today='true'] .weather-forecast-icon,
+.weather-forecast li[data-today='true'] .weather-forecast-temperature b,
+.weather-forecast li[data-today='true'] .weather-forecast-temperature i {
+  color: var(--active);
+}
+
 .weather-card .secondary-action {
   width: 100%;
+}
+
+@keyframes weather-icon-sun {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes weather-icon-cloud {
+  to {
+    translate: 3px 0;
+  }
+}
+
+@keyframes weather-icon-rain {
+  50% {
+    translate: 0 3px;
+  }
+}
+
+@keyframes weather-icon-thunder {
+  12%,
+  16% {
+    opacity: 0.45;
+    scale: 1.08;
+  }
+
+  14%,
+  18%,
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes weather-icon-snow {
+  to {
+    rotate: 180deg;
+  }
+}
+
+@keyframes weather-icon-fog {
+  to {
+    opacity: 0.65;
+    translate: 4px 0;
+  }
 }
 
 .track-card {
