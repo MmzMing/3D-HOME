@@ -1,14 +1,4 @@
-import {
-  Code2,
-  ExternalLink,
-  Globe2,
-  House,
-  Image,
-  Music2,
-  Rss,
-  Search,
-  UserRound,
-} from 'lucide-react';
+import { Code2, ExternalLink, Globe2, Image, Music2, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { ModalShell } from '@/components/common/modal-shell';
@@ -17,7 +7,7 @@ import { useRoomStore } from '@/stores/room-store';
 import { runRoomCommand } from '@/utils/room-commands';
 import { searchDocuments, type SearchDocument } from '@/utils/search-index';
 
-const icons = { Code2, Globe2, House, Image, Music2, Rss, UserRound };
+const icons = { Code2, Globe2, Image, Music2 };
 type SearchItem = (typeof searchConfig.scopes)[number]['items'][number];
 type ExternalItem = Extract<SearchItem, { kind: 'external' }>;
 
@@ -64,7 +54,7 @@ export function SearchDialog() {
         if (!open) closePanel();
       }}
       title="搜索终端"
-      description="站内内容、快捷入口与外部搜索"
+      description="站内内容与外部搜索"
     >
       <div className="search-scopes" role="tablist" aria-label="搜索分类">
         {searchConfig.scopes.map((item) => {
@@ -143,37 +133,7 @@ export function SearchDialog() {
             </ul>
           )}
         </section>
-      ) : (
-        <section className="search-shortcuts" aria-label="快捷入口">
-          <h2>快捷入口</h2>
-          <div>
-            {scope.items.map((item) => {
-              const Icon =
-                item.icon === undefined ? ScopeIcon : icons[item.icon as keyof typeof icons];
-              if (item.kind === 'command')
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => {
-                      closePanel();
-                      runRoomCommand(item.command);
-                    }}
-                  >
-                    <Icon aria-hidden="true" size={19} />
-                    <span>{item.label}</span>
-                  </button>
-                );
-              return (
-                <a key={item.id} href={item.url} target="_blank" rel="noopener noreferrer">
-                  <Icon aria-hidden="true" size={19} />
-                  <span>{item.label}</span>
-                </a>
-              );
-            })}
-          </div>
-        </section>
-      )}
+      ) : null}
     </ModalShell>
   );
 }

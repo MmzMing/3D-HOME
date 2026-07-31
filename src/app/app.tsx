@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { FeedDialog } from '@/features/feeds';
+import { DoorExitDialog } from '@/features/door-exit';
 import { DollWords } from '@/features/doll-words';
 import { LinkDialog } from '@/features/links';
 import { MusicBootstrap, MusicDialog, NowPlaying } from '@/features/music';
@@ -39,6 +40,7 @@ function RoomExperience() {
       </section>
 
       <ProfileDialog />
+      <DoorExitDialog />
       <LinkDialog />
       <FeedDialog />
       <MusicDialog />

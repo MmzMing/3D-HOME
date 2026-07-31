@@ -98,8 +98,13 @@ export function activateRoomObject(id: RoomObjectId) {
       sound('switch');
       break;
     case 'door':
-      room.patchObjectState({ doorOpen: !state.doorOpen });
-      sound('soft');
+      if (state.doorOpen) {
+        room.openDoorExitPrompt();
+        sound('chime');
+      } else {
+        room.patchObjectState({ doorOpen: true });
+        sound('soft');
+      }
       break;
     case 'window':
       room.patchObjectState({ windowOpen: !state.windowOpen });

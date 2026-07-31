@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { appConfig, themeConfig } from '@/config';
+import { appConfig, feedsConfig, themeConfig } from '@/config';
 import type { CameraZone, PanelId, ProfileTab, RoomObjectState, ThemeMode } from '@/types/room';
 import { readStorage, writeStorage } from '@/utils/storage';
 
@@ -9,7 +9,9 @@ interface RoomState {
   dollWordBurst: { id: number; phrase: string } | null;
   dollWordClearRevision: number;
   dollWordCount: number;
+  doorExitFeedId: string | null;
   hoveredObject: string | null;
+  isDoorExitPromptOpen: boolean;
   isLinkClusterOpen: boolean;
   isObjectMenuOpen: boolean;
   isSoundEnabled: boolean;
@@ -22,6 +24,9 @@ interface RoomState {
   theme: ThemeMode;
   closePanel: () => void;
   clearDollWords: () => void;
+  openDoorExitPrompt: () => void;
+  refreshDoorExitLink: () => void;
+  setDoorExitPromptOpen: (open: boolean) => void;
   releaseDollWords: (phrase: string) => void;
   setDollWordCount: (count: number) => void;
   openFeed: (feedId: string) => void;
@@ -65,12 +70,21 @@ const initialSound =
     ? true
     : readStorage(themeConfig.soundStorageKey, ['enabled', 'disabled'], 'enabled') === 'enabled';
 
+function randomDoorExitFeedId(currentId: string | null) {
+  const enabledFeeds = feedsConfig.filter((feed) => feed.enabled);
+  const candidates = enabledFeeds.filter((feed) => feed.id !== currentId);
+  const feeds = candidates.length === 0 ? enabledFeeds : candidates;
+  return feeds[Math.floor(Math.random() * feeds.length)]?.id ?? null;
+}
+
 export const useRoomStore = create<RoomState>((set) => ({
   cameraZone: appConfig.defaultCameraZone,
   dollWordBurst: null,
   dollWordClearRevision: 0,
   dollWordCount: 0,
+  doorExitFeedId: feedsConfig.find((feed) => feed.enabled)?.id ?? null,
   hoveredObject: null,
+  isDoorExitPromptOpen: false,
   isLinkClusterOpen: false,
   isObjectMenuOpen: false,
   isSoundEnabled: initialSound,
@@ -84,6 +98,14 @@ export const useRoomStore = create<RoomState>((set) => ({
   closePanel: () => set({ panel: null, selectedFeedId: null, selectedLinkId: null }),
   clearDollWords: () =>
     set((state) => ({ dollWordClearRevision: state.dollWordClearRevision + 1, dollWordCount: 0 })),
+  openDoorExitPrompt: () =>
+    set((state) => ({
+      doorExitFeedId: randomDoorExitFeedId(state.doorExitFeedId),
+      isDoorExitPromptOpen: true,
+    })),
+  refreshDoorExitLink: () =>
+    set((state) => ({ doorExitFeedId: randomDoorExitFeedId(state.doorExitFeedId) })),
+  setDoorExitPromptOpen: (isDoorExitPromptOpen) => set({ isDoorExitPromptOpen }),
   releaseDollWords: (phrase) =>
     set((state) => ({
       dollWordBurst: { id: (state.dollWordBurst?.id ?? 0) + 1, phrase },

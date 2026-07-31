@@ -8,6 +8,54 @@
   pointer-events: none;
 }
 
+.door-exit-confirm {
+  display: grid;
+  gap: 14px;
+}
+
+.door-exit-confirm p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.door-exit-confirm strong {
+  color: var(--ink);
+}
+
+.door-exit-destination {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.door-exit-link {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface-muted);
+  color: var(--active);
+  font-family: var(--font-pixel);
+  font-size: 12px;
+}
+
+.door-exit-link span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.door-exit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .doll-words,
 .doll-word-popup {
   position: fixed;
@@ -318,7 +366,6 @@
 }
 
 .search-results h2,
-.search-shortcuts h2,
 .playlist h2 {
   margin: 22px 0 10px;
   font-family: var(--font-pixel);
@@ -334,9 +381,7 @@
   list-style: none;
 }
 
-.search-results li button,
-.search-shortcuts > div > button,
-.search-shortcuts > div > a {
+.search-results li button {
   display: flex;
   width: 100%;
   min-height: 52px;
@@ -352,9 +397,7 @@
   text-decoration: none;
 }
 
-.search-results li button:hover,
-.search-shortcuts > div > button:hover,
-.search-shortcuts > div > a:hover {
+.search-results li button:hover {
   border-color: var(--active);
   background: var(--active-soft);
 }
@@ -367,17 +410,6 @@
 .search-results small {
   color: var(--muted);
   font-family: var(--font-pixel);
-}
-
-.search-shortcuts > div {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 7px;
-}
-
-.search-shortcuts > div > button,
-.search-shortcuts > div > a {
-  justify-content: flex-start;
 }
 
 .music-layout {

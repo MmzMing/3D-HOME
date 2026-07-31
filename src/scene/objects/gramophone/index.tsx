@@ -8,6 +8,13 @@ import { useRoomInteraction } from '@/scene/primitives/use-room-interaction';
 import { usePlayerStore } from '@/stores/player-store';
 import { useRoomStore } from '@/stores/room-store';
 
+function hornRing(radius: number) {
+  return Array.from({ length: 33 }, (_, index) => {
+    const angle = (index / 32) * Math.PI * 2;
+    return [Math.cos(angle) * radius, 0, Math.sin(angle) * radius] as [number, number, number];
+  });
+}
+
 export function Gramophone() {
   const record = useRef<Group>(null);
   const notes = useRef<Group>(null);
@@ -63,10 +70,32 @@ export function Gramophone() {
         lineWidth={1.4}
       />
       <LineCylinder
-        args={[0.58, 0.13, 0.82, 28]}
+        args={[0.64, 0.13, 0.82, 32]}
         position={[0.83, 2.3, -0.2]}
         rotation={[0, 0, -0.72]}
         accent={playing ? 'warm' : undefined}
+      />
+      <group position={[1.1, 2.61, -0.2]} rotation={[0, 0, -0.72]}>
+        <Line points={hornRing(0.66)} color={playing ? '#fbbf24' : color} lineWidth={1.5} />
+        <Line points={hornRing(0.48)} color={color} lineWidth={1.1} />
+      </group>
+      <Line
+        points={[
+          [0.1, 1.61, 0.36],
+          [0.42, 1.86, 0.14],
+          [0.7, 2.01, -0.18],
+        ]}
+        color={playing ? '#fbbf24' : color}
+        lineWidth={1.4}
+      />
+      <Line
+        points={[
+          [0.52, 1.6, -0.34],
+          [0.68, 1.92, -0.22],
+          [0.78, 2.03, -0.2],
+        ]}
+        color={color}
+        lineWidth={1.1}
       />
       <group ref={notes} visible={playing} position={[0.84, 2.88, -0.08]}>
         <Text position={[-0.24, 0, 0]} fontSize={0.5} color={noteColor}>

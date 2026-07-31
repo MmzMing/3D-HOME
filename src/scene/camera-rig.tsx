@@ -1,3 +1,4 @@
+import { MapControls } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import { useEffect } from 'react';
@@ -6,7 +7,7 @@ import type { OrthographicCamera } from 'three';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { useRoomStore } from '@/stores/room-store';
 
-const zones = {
+export const cameraZones = {
   lounge: { position: [20, 14.5, 23] as const, target: [0.8, 1.8, 1.8] as const, zoom: 70 },
   overview: { position: [20, 14.5, 22] as const, target: [0, 2.85, 0.18] as const, zoom: 58 },
   workspace: { position: [18.5, 13.2, 21] as const, target: [-0.8, 2.7, -5.8] as const, zoom: 77 },
@@ -19,7 +20,7 @@ export function CameraRig() {
 
   useEffect(() => {
     const orthographic = get().camera as OrthographicCamera;
-    const destination = zones[zone];
+    const destination = cameraZones[zone];
     const mobile = size.width < 720;
     const zoom = destination.zoom * (mobile ? 0.7 : 1);
     const target = { x: destination.target[0], y: destination.target[1], z: destination.target[2] };
@@ -63,5 +64,16 @@ export function CameraRig() {
     return () => context.revert();
   }, [get, invalidate, reducedMotion, size.width, zone]);
 
-  return null;
+  if (size.width >= 720) return null;
+
+  return (
+    <MapControls
+      enableDamping
+      enablePan
+      enableRotate={false}
+      enableZoom={false}
+      panSpeed={0.7}
+      target={cameraZones[zone].target}
+    />
+  );
 }

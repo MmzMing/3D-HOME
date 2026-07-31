@@ -2,6 +2,8 @@ import { ExternalLink, GitFork, Star } from 'lucide-react';
 
 import type { GitHubData } from '@/api';
 
+import { ContributionHeatmap } from './contribution-heatmap';
+
 export function GitHubCard({ data }: { data: GitHubData }) {
   return (
     <section className="github-card" aria-labelledby="github-card-title">
@@ -30,11 +32,7 @@ export function GitHubCard({ data }: { data: GitHubData }) {
           </div>
         </dl>
       </div>
-      <div className="contribution-grid" aria-label="最近一年贡献活动">
-        {data.contributions.slice(-154).map((day) => (
-          <span key={day.date} data-level={day.level} title={`${day.date}: ${String(day.count)}`} />
-        ))}
-      </div>
+      <ContributionHeatmap contributions={data.contributions} />
       <div className="repository-list">
         {data.repositories.map((repo) => (
           <article key={repo.url}>

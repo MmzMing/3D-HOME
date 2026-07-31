@@ -31,8 +31,16 @@ interface Popup {
 type MatterApi = typeof Matter;
 
 const frameDurationMs = 1000 / 60;
-const maxGlyphs = 80;
+const desktopMaxGlyphs = 120;
+const desktopMaxPopups = 5;
+const mobileBreakpoint = 719;
+const mobileMaxGlyphs = 80;
+const mobileMaxPopups = 4;
 const wallThickness = 80;
+
+function isMobileViewport() {
+  return window.innerWidth <= mobileBreakpoint;
+}
 
 function isInteractiveTarget(target: EventTarget | null) {
   return (
@@ -268,6 +276,7 @@ export function DollWords() {
       bodiesRef.current.set(id, body);
 
       const next = [...glyphsRef.current, { ...input, id, isClearing: false }];
+      const maxGlyphs = isMobileViewport() ? mobileMaxGlyphs : desktopMaxGlyphs;
       const overflow = Math.max(0, next.length - maxGlyphs);
       const kept = overflow === 0 ? next : next.slice(overflow);
 
@@ -327,8 +336,9 @@ export function DollWords() {
     const fontFamily = fonts[Math.floor(Math.random() * fonts.length)]?.family ?? 'Ark Pixel';
     const x = window.innerWidth * (0.16 + Math.random() * 0.68);
     const y = window.innerHeight * (0.18 + Math.random() * 0.5);
+    const maxPopups = isMobileViewport() ? mobileMaxPopups : desktopMaxPopups;
     setPopups((current) => [
-      ...current.slice(-3),
+      ...current.slice(-(maxPopups - 1)),
       { fontFamily, id: burst.id, phrase: burst.phrase, x, y },
     ]);
   }, [burst]);
