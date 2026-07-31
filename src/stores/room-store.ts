@@ -56,6 +56,7 @@ const initialObjectState: RoomObjectState = {
   doorOpen: false,
   drawerOpen: false,
   fanSpeed: 0,
+  monitorOn: true,
   plantPulse: 0,
   weatherDollPulse: 0,
   windowOpen: false,

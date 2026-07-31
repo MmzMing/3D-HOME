@@ -101,9 +101,11 @@ function LinkBubble({ index, link, open }: { index: number; link: LinkConfig; op
 
 export function Monitor() {
   const interaction = useRoomInteraction('monitor');
-  const open = useRoomStore((state) => state.isLinkClusterOpen);
+  const linkClusterOpen = useRoomStore((state) => state.isLinkClusterOpen);
   const theme = useRoomStore((state) => state.theme);
   const lampOn = useRoomStore((state) => state.objectState.deskLampOn);
+  const monitorOn = useRoomStore((state) => state.objectState.monitorOn);
+  const open = linkClusterOpen && monitorOn;
   const lineColor = theme === 'light' ? '#000000' : '#f3f4f6';
   const blogCover = linksConfig.find((link) => link.id === 'blog')?.image ?? linksConfig[0]?.image;
   const coverTexture = useTexture(blogCover ?? '/assets/images/links/blog.webp');
@@ -119,7 +121,7 @@ export function Monitor() {
       : undefined;
 
   return (
-    <group position={[-2.25, 2.18, -6.95]} {...interaction.bind}>
+    <group position={[-2.25, 2.18, -6.95]} {...(monitorOn ? interaction.bind : {})}>
       <LineBox
         args={[3.08, 0.16, 0.82]}
         position={[0, 0.38, 0.08]}
@@ -131,10 +133,10 @@ export function Monitor() {
       <LineBox
         args={[2.25, 1.38, 0.12]}
         position={[0, 1.42, 0]}
-        hovered={interaction.hovered}
+        hovered={monitorOn && interaction.hovered}
         accent={open ? 'active' : undefined}
         glow={
-          theme === 'dark'
+          theme === 'dark' && monitorOn
             ? {
                 color: '#67e8f9',
                 intensity: open ? 2.7 : 2.4,
@@ -145,10 +147,16 @@ export function Monitor() {
             : undefined
         }
       />
-      <mesh position={[0, 1.42, 0.066]}>
+      <mesh position={[0, 1.42, 0.064]}>
         <planeGeometry args={[2.05, 1.16]} />
-        <meshBasicMaterial map={coverTexture} toneMapped={false} />
+        <meshBasicMaterial color={theme === 'dark' ? '#080a0c' : '#f4f4f4'} toneMapped={false} />
       </mesh>
+      {monitorOn ? (
+        <mesh position={[0, 1.42, 0.068]}>
+          <planeGeometry args={[2.05, 1.16]} />
+          <meshBasicMaterial map={coverTexture} toneMapped={false} />
+        </mesh>
+      ) : null}
       <LineBox
         args={[0.14, 0.28, 0.14]}
         position={[0, 0.62, -0.08]}

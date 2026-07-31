@@ -12,6 +12,7 @@ export const roomObjects: readonly RoomObjectDefinition[] = [
   { id: 'weather-doll', label: '晴天娃娃天气', zone: 'workspace' },
   { id: 'gramophone', label: '音乐留声机', zone: 'lounge' },
   { id: 'keyboard', label: '搜索键盘', zone: 'workspace' },
+  { id: 'mouse', label: '显示器电源鼠标', zone: 'workspace' },
   { id: 'wall-switch', label: '主题开关', zone: 'workspace' },
   { id: 'desk-lamp', label: '主台灯', zone: 'workspace' },
   { id: 'door', label: '门户', zone: 'overview' },
@@ -54,6 +55,7 @@ export function activateRoomObject(id: RoomObjectId) {
   const state = room.objectState;
   switch (id) {
     case 'monitor':
+      if (!state.monitorOn) break;
       room.setLinkClusterOpen(!room.isLinkClusterOpen);
       sound();
       break;
@@ -89,6 +91,13 @@ export function activateRoomObject(id: RoomObjectId) {
       room.openPanel('search');
       sound();
       break;
+    case 'mouse': {
+      const monitorOn = !state.monitorOn;
+      room.patchObjectState({ monitorOn });
+      if (!monitorOn) room.setLinkClusterOpen(false);
+      sound('switch');
+      break;
+    }
     case 'wall-switch':
       room.toggleTheme();
       sound('switch');

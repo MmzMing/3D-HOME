@@ -112,6 +112,17 @@ export function Portrait() {
         args={[1.55, 1.25, 0.09]}
         hovered={interaction.hovered}
         accent={interaction.hovered ? 'active' : undefined}
+        glow={
+          theme === 'dark'
+            ? {
+                color: '#67e8f9',
+                intensity: 2.05,
+                lineWidth: 1.45,
+                opacity: 0.58,
+                scale: 1.012,
+              }
+            : undefined
+        }
       />
       <mesh position={[0, 0, 0.052]}>
         <planeGeometry args={[0.94, 0.94]} />

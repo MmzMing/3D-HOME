@@ -16,6 +16,7 @@ export type RoomObjectId =
   | 'weather-doll'
   | 'gramophone'
   | 'keyboard'
+  | 'mouse'
   | 'wall-switch'
   | 'desk-lamp'
   | 'door'
@@ -51,6 +52,7 @@ export interface RoomObjectState {
   doorOpen: boolean;
   drawerOpen: boolean;
   fanSpeed: 0 | 1 | 2;
+  monitorOn: boolean;
   plantPulse: number;
   weatherDollPulse: number;
   windowOpen: boolean;
