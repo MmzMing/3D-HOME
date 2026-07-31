@@ -7,7 +7,8 @@
   background: #fff;
   color: #000;
   opacity: 1;
-  transition: opacity 280ms ease;
+  transition: opacity 420ms cubic-bezier(0.4, 0, 1, 1);
+  will-change: opacity;
 }
 
 .room-loader[data-loader-theme='dark'] {
@@ -15,7 +16,7 @@
   color: #f3f4f6;
 }
 
-.room-loader[data-complete='true'] {
+.room-loader[data-exiting='true'] {
   pointer-events: none;
   opacity: 0;
 }
@@ -23,6 +24,11 @@
 .room-loader-bulb {
   width: 216px;
   height: 216px;
+  animation: room-loader-swing 1.3s ease-in-out infinite alternate;
+  backface-visibility: hidden;
+  contain: layout paint;
+  transform-origin: 50% 15%;
+  will-change: transform;
 }
 
 .room-loader-bulb svg {
@@ -31,8 +37,6 @@
   height: 216px;
   overflow: visible;
   fill: currentcolor;
-  transform-origin: 50% 15%;
-  animation: room-loader-swing 1.3s ease-in-out infinite alternate;
 }
 
 .room-loader-progress {
@@ -45,16 +49,23 @@
 
 @keyframes room-loader-swing {
   from {
-    transform: rotate(18deg);
+    transform: translate3d(0, 0, 0) rotate(18deg);
   }
 
   to {
-    transform: rotate(-18deg);
+    transform: translate3d(0, 0, 0) rotate(-18deg);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .room-loader-bulb svg {
+  .room-loader {
+    transition: none;
+    will-change: auto;
+  }
+
+  .room-loader-bulb {
     animation: none;
+    transform: none;
+    will-change: auto;
   }
 }

@@ -26,6 +26,19 @@
 
 .room-stage {
   z-index: var(--z-stage);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+}
+
+.room-stage[data-revealed='true'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.room-stage[data-settled='true'] {
+  will-change: auto;
 }
 
 .room-fallback {
@@ -174,4 +187,11 @@
 .fatal-error p:not(.eyebrow) {
   max-width: 58ch;
   color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .room-stage {
+    transition: none;
+    will-change: auto;
+  }
 }

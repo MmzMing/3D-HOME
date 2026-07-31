@@ -31,13 +31,26 @@ function createQueryClient() {
 function RoomExperience() {
   const [hasWebGL] = useState(supportsWebGL);
   const [canvasReady, setCanvasReady] = useState(!hasWebGL);
+  const [roomRevealed, setRoomRevealed] = useState(false);
+  const [roomSettled, setRoomSettled] = useState(false);
   const [sceneReady, setSceneReady] = useState(!hasWebGL);
   const markCanvasReady = useCallback(() => setCanvasReady(true), []);
+  const revealRoom = useCallback(() => setRoomRevealed(true), []);
   const markSceneReady = useCallback(() => setSceneReady(true), []);
 
   return (
     <main className="app-shell">
-      <section className="room-stage" aria-label="可交互三维房间">
+      <section
+        className="room-stage"
+        data-revealed={roomRevealed ? 'true' : 'false'}
+        data-settled={roomSettled ? 'true' : 'false'}
+        onTransitionEnd={(event) => {
+          if (event.currentTarget === event.target && event.propertyName === 'opacity') {
+            setRoomSettled(true);
+          }
+        }}
+        aria-label="可交互三维房间"
+      >
         {hasWebGL ? (
           <RoomCanvas onCanvasReady={markCanvasReady} onSceneReady={markSceneReady} />
         ) : (
@@ -55,7 +68,7 @@ function RoomExperience() {
       <MusicDialog />
       <SearchDialog />
       <MusicBootstrap />
-      <RoomLoader canvasReady={canvasReady} sceneReady={sceneReady} />
+      <RoomLoader canvasReady={canvasReady} onReveal={revealRoom} sceneReady={sceneReady} />
     </main>
   );
 }

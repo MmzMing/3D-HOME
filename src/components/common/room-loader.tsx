@@ -1,18 +1,24 @@
 import { useProgress } from '@react-three/drei';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { useRoomStore } from '@/stores/room-store';
 
 interface RoomLoaderProps {
   canvasReady: boolean;
+  onReveal: () => void;
   sceneReady: boolean;
 }
 
-export function RoomLoader({ canvasReady, sceneReady }: RoomLoaderProps) {
+export function RoomLoader({ canvasReady, onReveal, sceneReady }: RoomLoaderProps) {
   const { active, progress, total } = useProgress();
   const theme = useRoomStore((state) => state.theme);
+  const reducedMotion = useReducedMotion();
   const [displayedProgress, setDisplayedProgress] = useState(6);
+  const [exiting, setExiting] = useState(false);
   const [visible, setVisible] = useState(true);
+
+  const finishExit = useCallback(() => setVisible(false), []);
 
   const targetProgress = useMemo(() => {
     if (sceneReady && !active) return 100;
@@ -21,32 +27,57 @@ export function RoomLoader({ canvasReady, sceneReady }: RoomLoaderProps) {
   }, [active, canvasReady, progress, sceneReady, total]);
 
   useEffect(() => {
-    let frame = 0;
+    let timeout = 0;
     const advance = () => {
       setDisplayedProgress((current) => {
         if (current >= targetProgress) return current;
         const step = Math.max(1, Math.ceil((targetProgress - current) * 0.14));
         const next = Math.min(targetProgress, current + step);
-        if (next < targetProgress) frame = window.requestAnimationFrame(advance);
+        if (next < targetProgress) timeout = window.setTimeout(advance, 50);
         return next;
       });
     };
-    frame = window.requestAnimationFrame(advance);
-    return () => window.cancelAnimationFrame(frame);
+    timeout = window.setTimeout(advance, 0);
+    return () => window.clearTimeout(timeout);
   }, [targetProgress]);
 
   useEffect(() => {
     if (displayedProgress < 100) return;
-    const timeout = window.setTimeout(() => setVisible(false), 320);
-    return () => window.clearTimeout(timeout);
-  }, [displayedProgress]);
+
+    let firstFrame = 0;
+    let secondFrame = 0;
+    let fallbackTimeout = 0;
+
+    firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => {
+        onReveal();
+
+        if (reducedMotion) {
+          finishExit();
+          return;
+        }
+
+        setExiting(true);
+        fallbackTimeout = window.setTimeout(finishExit, 520);
+      });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+      window.clearTimeout(fallbackTimeout);
+    };
+  }, [displayedProgress, finishExit, onReveal, reducedMotion]);
 
   if (!visible) return null;
   return (
     <div
       className="room-loader"
-      data-complete={displayedProgress >= 100 ? 'true' : 'false'}
+      data-exiting={exiting ? 'true' : 'false'}
       data-loader-theme={theme}
+      onTransitionEnd={(event) => {
+        if (event.currentTarget === event.target && event.propertyName === 'opacity') finishExit();
+      }}
       role="progressbar"
       aria-label="正在加载三维房间"
       aria-valuemax={100}
