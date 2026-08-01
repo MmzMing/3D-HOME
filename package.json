@@ -6,8 +6,8 @@
   "type": "module",
   "packageManager": "pnpm@11.17.0",
   "engines": {
-    "node": ">=24.11.0 <25",
-    "pnpm": ">=11.17.0 <12"
+    "node": ">=24.9.0 <25",
+    "pnpm": ">=10.33.0 <12"
   },
   "scripts": {
     "dev": "vite",

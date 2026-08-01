@@ -21,6 +21,7 @@ interface PlayerState {
   hasStarted: boolean;
   mode: PlaybackMode;
   progress: number;
+  showLyrics: boolean;
   status: PlaybackStatus;
   tracks: readonly MusicTrack[];
   volume: number;
@@ -34,6 +35,7 @@ interface PlayerState {
   setTracks: (tracks: readonly MusicTrack[]) => void;
   setVolume: (volume: number) => void;
   cycleMode: () => void;
+  toggleLyrics: () => void;
 }
 
 let audio: HTMLAudioElement | null = null;
@@ -92,6 +94,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => {
           ? 'shuffle'
           : 'list',
     progress: 0,
+    showLyrics: true,
     status: 'idle',
     tracks: [],
     volume: musicConfig.volume,
@@ -163,5 +166,6 @@ export const usePlayerStore = create<PlayerState>((set, get) => {
       set((state) => ({
         mode: state.mode === 'list' ? 'loop' : state.mode === 'loop' ? 'shuffle' : 'list',
       })),
+    toggleLyrics: () => set((state) => ({ showLyrics: !state.showLyrics })),
   };
 });

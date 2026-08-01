@@ -176,21 +176,33 @@ export function createBurstPlan(
   const seed = hashDollWordSeed(id, phrase);
   const random = createSeededRandom(seed);
   const fontSize = (mobile ? 0.68 : 0.86) + random() * (mobile ? 0.18 : 0.26);
-  const typingIntervalMs = 65 + Math.floor(random() * 31);
+  const graphemes = segmentGraphemes(phrase);
+  const graphemeCount = graphemes.length;
+  const baseTypingIntervalMs = 65 + Math.floor(random() * 31);
+  // 长句压缩打字间隔，目标 2s 内完成打字；短句保持原节奏
+  const typingIntervalMs = Math.min(
+    baseTypingIntervalMs,
+    Math.floor(2_000 / Math.max(1, graphemeCount)),
+  );
   const holdMs = 470 + Math.floor(random() * 61);
-  const releaseIntervalMs = 72 + Math.floor(random() * 48);
-  const layout = layoutGraphemes(segmentGraphemes(phrase), {
+  const baseReleaseIntervalMs = 72 + Math.floor(random() * 48);
+  const layout = layoutGraphemes(graphemes, {
     fontSize,
     maxWidth: mobile ? 3.35 : 5.1,
   });
   const physicalLayoutIndices = layout
     .map((glyph, index) => (glyph.isWhitespace ? -1 : index))
     .filter((index) => index >= 0);
-  const releaseOrder = shuffledIndices(physicalLayoutIndices.length, random).map(
-    (physicalIndex) => physicalLayoutIndices[physicalIndex] ?? 0,
+  const visibleCount = physicalLayoutIndices.length;
+  // 长句压缩掉落间隔，目标 0.7s 内全部开始掉落；短句保持原节奏
+  const releaseIntervalMs = Math.min(
+    baseReleaseIntervalMs,
+    Math.floor(700 / Math.max(1, visibleCount - 1)),
   );
+  // 从头到尾顺序掉落，不再随机
+  const releaseOrder = [...physicalLayoutIndices];
   const releaseRank = new Map(releaseOrder.map((layoutIndex, rank) => [layoutIndex, rank]));
-  const typingEnd = segmentGraphemes(phrase).length * typingIntervalMs;
+  const typingEnd = graphemeCount * typingIntervalMs;
 
   return {
     anchorIndex: Math.floor(random() * Math.max(1, anchorCount)),

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import {
+  Captions,
   ListMusic,
   Music2,
   Pause,
@@ -16,6 +17,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { getMusic } from '@/api';
 import { TrackCard } from '@/components/cards/track-card';
+import { useLyricsDollWords } from '@/hooks/use-lyrics-doll-words';
 import { usePlayerStore } from '@/stores/player-store';
 import { useRoomStore } from '@/stores/room-store';
 
@@ -31,6 +33,7 @@ function formatTime(value: number) {
 export function MusicBootstrap() {
   const initialize = usePlayerStore((state) => state.initialize);
   const setTracks = usePlayerStore((state) => state.setTracks);
+  useLyricsDollWords();
   const music = useQuery({
     queryFn: getMusic,
     queryKey: ['music'],
@@ -61,6 +64,8 @@ export function FloatingMusicPlayer() {
   const panel = useRoomStore((state) => state.panel);
   const closePanel = useRoomStore((state) => state.closePanel);
   const openPanel = useRoomStore((state) => state.openPanel);
+  const showLyrics = usePlayerStore((state) => state.showLyrics);
+  const toggleLyrics = usePlayerStore((state) => state.toggleLyrics);
   const [isCollapsed, setCollapsed] = useState(false);
   const [isVolumeOpen, setVolumeOpen] = useState(false);
   const collapseTimerRef = useRef<number | null>(null);
@@ -262,6 +267,18 @@ export function FloatingMusicPlayer() {
                   <Volume2 aria-hidden="true" size={19} />
                 </button>
               </div>
+              <button
+                type="button"
+                className="floating-player-button"
+                aria-label={showLyrics ? '关闭歌词' : '开启歌词'}
+                aria-pressed={showLyrics}
+                title={showLyrics ? '关闭歌词' : '开启歌词'}
+                data-active={showLyrics ? 'true' : 'false'}
+                disabled={track === undefined}
+                onClick={toggleLyrics}
+              >
+                <Captions aria-hidden="true" size={20} />
+              </button>
               <button
                 type="button"
                 className="floating-player-button"

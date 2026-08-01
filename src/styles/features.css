@@ -314,7 +314,8 @@
 
 .floating-player-button:hover,
 .floating-player-button:focus-visible,
-.floating-player-button[aria-expanded='true'] {
+.floating-player-button[aria-expanded='true'],
+.floating-player-button[data-active='true'] {
   background: var(--active-soft);
   color: var(--active);
 }
