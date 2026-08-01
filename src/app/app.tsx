@@ -1,16 +1,16 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { RoomLoader } from '@/components/common/room-loader';
 import { FeedDialog } from '@/features/feeds';
 import { DoorExitDialog } from '@/features/door-exit';
-import { DollWords } from '@/features/doll-words';
 import { LinkDialog } from '@/features/links';
 import { FloatingMusicPlayer, MusicBootstrap } from '@/features/music';
 import { ProfileDialog } from '@/features/profile';
 import { SearchDialog } from '@/features/search';
 import { WeatherPopover } from '@/features/weather';
 import { RoomCanvas, RoomFallback } from '@/scene';
+import { preloadProfileAudio } from '@/utils/room-audio';
 import { supportsWebGL } from '@/utils/webgl';
 
 import { AppErrorBoundary } from './app-error-boundary';
@@ -31,12 +31,32 @@ function createQueryClient() {
 function RoomExperience() {
   const [hasWebGL] = useState(supportsWebGL);
   const [canvasReady, setCanvasReady] = useState(!hasWebGL);
+  const [dollWordsReady, setDollWordsReady] = useState(!hasWebGL);
+  const [profileAudioReady, setProfileAudioReady] = useState(!hasWebGL);
   const [roomRevealed, setRoomRevealed] = useState(false);
   const [roomSettled, setRoomSettled] = useState(false);
   const [sceneReady, setSceneReady] = useState(!hasWebGL);
   const markCanvasReady = useCallback(() => setCanvasReady(true), []);
+  const markDollWordsReady = useCallback(() => setDollWordsReady(true), []);
   const revealRoom = useCallback(() => setRoomRevealed(true), []);
   const markSceneReady = useCallback(() => setSceneReady(true), []);
+
+  useEffect(() => {
+    if (!hasWebGL) return;
+    let cancelled = false;
+    void preloadProfileAudio().finally(() => {
+      if (!cancelled) setProfileAudioReady(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [hasWebGL]);
+
+  useEffect(() => {
+    if (!roomRevealed || roomSettled) return;
+    const fallback = window.setTimeout(() => setRoomSettled(true), 560);
+    return () => window.clearTimeout(fallback);
+  }, [roomRevealed, roomSettled]);
 
   return (
     <main className="app-shell">
@@ -52,11 +72,14 @@ function RoomExperience() {
         aria-label="可交互三维房间"
       >
         {hasWebGL ? (
-          <RoomCanvas onCanvasReady={markCanvasReady} onSceneReady={markSceneReady} />
+          <RoomCanvas
+            onCanvasReady={markCanvasReady}
+            onDollWordsReady={markDollWordsReady}
+            onSceneReady={markSceneReady}
+          />
         ) : (
           <RoomFallback />
         )}
-        <DollWords />
         <WeatherPopover />
         <FloatingMusicPlayer />
       </section>
@@ -67,7 +90,11 @@ function RoomExperience() {
       <FeedDialog />
       <SearchDialog />
       <MusicBootstrap />
-      <RoomLoader canvasReady={canvasReady} onReveal={revealRoom} sceneReady={sceneReady} />
+      <RoomLoader
+        canvasReady={canvasReady}
+        onReveal={revealRoom}
+        sceneReady={sceneReady && dollWordsReady && profileAudioReady}
+      />
     </main>
   );
 }

@@ -6,6 +6,7 @@ import { useRoomStore } from '@/stores/room-store';
 
 interface RoomCanvasProps {
   onCanvasReady: () => void;
+  onDollWordsReady: () => void;
   onSceneReady: () => void;
 }
 
@@ -14,7 +15,7 @@ function SceneReady({ onReady }: { onReady: () => void }) {
   return null;
 }
 
-export function RoomCanvas({ onCanvasReady, onSceneReady }: RoomCanvasProps) {
+export function RoomCanvas({ onCanvasReady, onDollWordsReady, onSceneReady }: RoomCanvasProps) {
   const theme = useRoomStore((state) => state.theme);
   return (
     <div className="room-canvas" aria-hidden="true" data-testid="room-canvas">
@@ -31,7 +32,7 @@ export function RoomCanvas({ onCanvasReady, onSceneReady }: RoomCanvasProps) {
       >
         <color attach="background" args={[theme === 'light' ? '#ffffff' : '#0b0d0f']} />
         <Suspense fallback={null}>
-          <RoomScene />
+          <RoomScene onDollWordsReady={onDollWordsReady} />
           <SceneReady onReady={onSceneReady} />
         </Suspense>
       </Canvas>

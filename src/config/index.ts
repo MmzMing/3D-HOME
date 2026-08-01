@@ -47,10 +47,12 @@ const profileSchema = z.object({
       .optional()
       .default([]),
     dollFonts: z
-      .array(z.object({ family: z.string().min(1) }))
+      .array(z.object({ family: z.string().min(1), src: localAsset }))
       .min(1)
       .optional()
-      .default([{ family: 'Ark Pixel' }]),
+      .default([
+        { family: 'Ark Pixel', src: '/assets/fonts/ark-pixel-12px-proportional-zh-cn.woff' },
+      ]),
     role: z.string().min(1),
     sticker: localAsset,
   }),

@@ -47,8 +47,8 @@ export function ProfileDoll() {
           const phrases = profileConfig.intro.audioPhrases;
           const phrase = phrases[Math.floor(Math.random() * phrases.length)];
           if (phrase === undefined) return;
-          playProfileAudio(phrase.track, soundEnabled);
           releaseDollWords(phrase.phrase);
+          playProfileAudio(phrase.track, soundEnabled);
         }}
         onPointerDown={(event) => {
           event.stopPropagation();

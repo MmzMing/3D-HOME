@@ -2,7 +2,6 @@ import { Bookshelf } from '@/scene/objects/bookshelf';
 import { AirConditioner } from '@/scene/objects/air-conditioner';
 import { Bed } from '@/scene/objects/bed';
 import { DeskFan } from '@/scene/objects/desk-fan';
-import { DollWordEraser } from '@/scene/objects/doll-eraser';
 import { Coffee } from '@/scene/objects/coffee';
 import { CoffeeTable } from '@/scene/objects/coffee-table';
 import { Desk } from '@/scene/objects/desk';
@@ -27,8 +26,9 @@ import { CameraRig } from '@/scene/camera-rig';
 import { RoomShell } from '@/scene/room-shell';
 import { SceneTicker } from '@/scene/scene-ticker';
 import { RoomPostprocessing } from '@/scene/effects/room-postprocessing';
+import { DollWordLayer } from '@/scene/doll-words/layer';
 
-export function RoomScene() {
+export function RoomScene({ onDollWordsReady }: { onDollWordsReady: () => void }) {
   return (
     <>
       <CameraRig />
@@ -45,7 +45,6 @@ export function RoomScene() {
         <Plant />
         <Portrait />
         <ProfileDoll />
-        <DollWordEraser />
         <WallSwitch />
         <Door />
         <Window />
@@ -61,6 +60,7 @@ export function RoomScene() {
         <CoffeeTable />
         <Bed />
       </group>
+      <DollWordLayer onReady={onDollWordsReady} />
       <RoomPostprocessing />
     </>
   );

@@ -77,6 +77,12 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
+            if (
+              id.includes('node_modules/@react-three/rapier') ||
+              id.includes('node_modules/@dimforge/rapier3d-compat')
+            ) {
+              return 'doll-words-physics';
+            }
             if (id.includes('node_modules/three') || id.includes('node_modules/@react-three')) {
               return 'three-vendor';
             }

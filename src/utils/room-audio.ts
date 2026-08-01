@@ -2,6 +2,8 @@ import { profileConfig } from '@/config';
 
 let context: AudioContext | null = null;
 const activeProfileAudios = new Set<HTMLAudioElement>();
+const profileAudioCache = new Map<string, HTMLAudioElement>();
+let profileAudioPreload: Promise<void> | null = null;
 const objectSounds = {
   'air-conditioner-on': {
     src: '/assets/audio/room/air-conditioner-on.mp3',
@@ -59,6 +61,35 @@ export function playRandomProfileAudio(enabled: boolean) {
   playProfileAudio(clip.track, enabled);
 }
 
+export function preloadProfileAudio() {
+  profileAudioPreload ??= Promise.all(
+    Array.from(new Set(profileConfig.intro.audioPhrases.map(({ track }) => track))).map(
+      (track) =>
+        new Promise<void>((resolve) => {
+          const audio = new Audio();
+          let settled = false;
+          const finish = () => {
+            if (settled) return;
+            settled = true;
+            window.clearTimeout(timeout);
+            audio.removeEventListener('canplaythrough', finish);
+            audio.removeEventListener('error', finish);
+            profileAudioCache.set(track, audio);
+            resolve();
+          };
+          const timeout = window.setTimeout(finish, 5_000);
+          audio.preload = 'auto';
+          audio.addEventListener('canplaythrough', finish, { once: true });
+          audio.addEventListener('error', finish, { once: true });
+          audio.src = track;
+          audio.load();
+          if (audio.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) finish();
+        }),
+    ),
+  ).then(() => undefined);
+  return profileAudioPreload;
+}
+
 export function playObjectSound(kind: ObjectSoundKind, enabled: boolean) {
   if (!enabled) return;
 
@@ -88,15 +119,22 @@ export function playObjectSound(kind: ObjectSoundKind, enabled: boolean) {
 export function playProfileAudio(track: string, enabled: boolean) {
   if (!enabled) return;
 
-  const audio = new Audio(track);
+  const cached = profileAudioCache.get(track);
+  const audio =
+    cached !== undefined && !activeProfileAudios.has(cached) ? cached : new Audio(track);
   const release = () => {
     activeProfileAudios.delete(audio);
     audio.pause();
-    audio.removeAttribute('src');
-    audio.load();
+    if (audio !== cached) {
+      audio.removeAttribute('src');
+      audio.load();
+    } else {
+      audio.currentTime = 0;
+    }
   };
 
   activeProfileAudios.add(audio);
+  audio.currentTime = 0;
   audio.volume = 0.6;
   audio.addEventListener('ended', release, { once: true });
   audio.addEventListener('error', release, { once: true });
