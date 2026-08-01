@@ -8,9 +8,6 @@ import { useRoomStore } from '@/stores/room-store';
 export function SceneTicker() {
   const airConditionerOn = useRoomStore((state) => state.objectState.airConditionerOn);
   const fanSpeed = useRoomStore((state) => state.objectState.fanSpeed);
-  const clockRunning = useRoomStore((state) => state.objectState.clockRunning);
-  const coffeeSteaming = useRoomStore((state) => state.objectState.coffeeSteaming);
-  const theme = useRoomStore((state) => state.theme);
   const playback = usePlayerStore((state) => state.status);
   const reducedMotion = useReducedMotion();
   const invalidate = useThree((state) => state.invalidate);
@@ -18,11 +15,7 @@ export function SceneTicker() {
 
   useEffect(() => {
     const highMotion = airConditionerOn || fanSpeed > 0 || playback === 'playing';
-    const ambientMotion = clockRunning || coffeeSteaming || theme === 'dark';
-    const continuous = !reducedMotion && (highMotion || ambientMotion);
-    if (!continuous) return;
-
-    const targetFps = highMotion ? (mobile ? 30 : 60) : mobile ? 15 : 30;
+    const targetFps = reducedMotion ? 15 : highMotion ? (mobile ? 30 : 60) : mobile ? 20 : 30;
     const frameInterval = 1000 / targetFps;
     let frame = 0;
     let previous = 0;
@@ -35,17 +28,7 @@ export function SceneTicker() {
     };
     frame = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(frame);
-  }, [
-    airConditionerOn,
-    clockRunning,
-    coffeeSteaming,
-    fanSpeed,
-    invalidate,
-    mobile,
-    playback,
-    reducedMotion,
-    theme,
-  ]);
+  }, [airConditionerOn, fanSpeed, invalidate, mobile, playback, reducedMotion]);
 
   return null;
 }

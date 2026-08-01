@@ -33,7 +33,7 @@ interface RoomState {
   openLink: (linkId: string) => void;
   openPanel: (panel: Exclude<PanelId, 'feed' | 'link' | null>) => void;
   patchObjectState: (patch: Partial<RoomObjectState>) => void;
-  pulseObject: (key: 'cushionPulse' | 'plantPulse' | 'weatherDollPulse') => void;
+  pulseObject: (key: 'cushionPulse' | 'plantPulse' | 'topPulse' | 'weatherDollPulse') => void;
   setCameraZone: (zone: CameraZone) => void;
   setHoveredObject: (id: string | null) => void;
   setLinkClusterOpen: (open: boolean) => void;
@@ -59,6 +59,7 @@ const initialObjectState: RoomObjectState = {
   fanSpeed: 0,
   monitorOn: true,
   plantPulse: 0,
+  topPulse: 0,
   weatherDollPulse: 0,
   windowOpen: false,
 };

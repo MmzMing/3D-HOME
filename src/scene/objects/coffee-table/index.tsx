@@ -1,6 +1,33 @@
-import { LineBox, LineCylinder, LineSphere } from '@/scene/primitives/line-shape';
+import { Line } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
+import { useRef } from 'react';
+import { MathUtils, Vector2, type Group } from 'three';
+
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import type { GlowOutlineProps } from '@/scene/effects/glow-effects';
+import {
+  InteractionProxy,
+  LineBox,
+  LineCylinder,
+  LineLathe,
+  LineSphere,
+} from '@/scene/primitives/line-shape';
+import { useRoomInteraction } from '@/scene/primitives/use-room-interaction';
 import { useRoomStore } from '@/stores/room-store';
+
+const topProfile = [
+  new Vector2(0, 0),
+  new Vector2(0.065, 0.12),
+  new Vector2(0.14, 0.21),
+  new Vector2(0.28, 0.3),
+  new Vector2(0.3, 0.34),
+  new Vector2(0.21, 0.39),
+  new Vector2(0.1, 0.43),
+  new Vector2(0.067, 0.51),
+  new Vector2(0.052, 0.7),
+  new Vector2(0.024, 0.78),
+  new Vector2(0, 0.78),
+];
 
 function GameController({ glow }: { glow: GlowOutlineProps | undefined }) {
   return (
@@ -30,6 +57,88 @@ function GameController({ glow }: { glow: GlowOutlineProps | undefined }) {
       ))}
       <LineCylinder args={[0.08, 0.09, 0.045, 16]} glow={glow} position={[-0.06, 0.2, 0.08]} />
       <LineCylinder args={[0.08, 0.09, 0.045, 16]} glow={glow} position={[0.08, 0.2, 0.08]} />
+    </group>
+  );
+}
+
+function SpinningTop({ glow }: { glow: GlowOutlineProps | undefined }) {
+  const tilt = useRef<Group>(null);
+  const spinner = useRef<Group>(null);
+  const ambientStrength = useRef(0);
+  const clickStrength = useRef(0);
+  const ambientPhase = useRef(0);
+  const clickPhase = useRef(0);
+  const nextAmbientAt = useRef(9);
+  const pulse = useRoomStore((state) => state.objectState.topPulse);
+  const theme = useRoomStore((state) => state.theme);
+  const interaction = useRoomInteraction('spinning-top');
+  const reducedMotion = useReducedMotion();
+  const lastPulse = useRef(pulse);
+
+  useFrame((state, delta) => {
+    const spinningGroup = spinner.current;
+    const tiltGroup = tilt.current;
+    if (spinningGroup === null || tiltGroup === null) return;
+
+    const speed = reducedMotion ? 1.2 : 4.8;
+    spinningGroup.rotation.y = (spinningGroup.rotation.y + delta * speed) % (Math.PI * 2);
+
+    if (pulse !== lastPulse.current) {
+      lastPulse.current = pulse;
+      if (!reducedMotion) {
+        clickStrength.current = Math.min(1.35, clickStrength.current + 1);
+        clickPhase.current += Math.PI * 0.37;
+      }
+    }
+
+    if (reducedMotion) {
+      ambientStrength.current = 0;
+      clickStrength.current = 0;
+      tiltGroup.rotation.x = MathUtils.damp(tiltGroup.rotation.x, 0, 10, delta);
+      tiltGroup.rotation.z = MathUtils.damp(tiltGroup.rotation.z, 0, 10, delta);
+      return;
+    }
+
+    const elapsed = state.clock.elapsedTime;
+    if (elapsed >= nextAmbientAt.current) {
+      ambientStrength.current = 1;
+      ambientPhase.current += Math.PI * 0.43;
+      nextAmbientAt.current = elapsed + 7 + Math.random() * 5;
+    }
+
+    ambientStrength.current = MathUtils.damp(ambientStrength.current, 0, 2.2, delta);
+    clickStrength.current = MathUtils.damp(clickStrength.current, 0, 3, delta);
+    ambientPhase.current += delta * 5.2;
+    clickPhase.current += delta * 11;
+
+    const targetX =
+      Math.cos(ambientPhase.current) * ambientStrength.current * 0.03 +
+      Math.cos(clickPhase.current) * clickStrength.current * 0.245;
+    const targetZ =
+      Math.sin(ambientPhase.current) * ambientStrength.current * 0.03 +
+      Math.sin(clickPhase.current) * clickStrength.current * 0.245;
+    tiltGroup.rotation.x = MathUtils.damp(tiltGroup.rotation.x, targetX, 18, delta);
+    tiltGroup.rotation.z = MathUtils.damp(tiltGroup.rotation.z, targetZ, 18, delta);
+  });
+
+  const markerColor = glow === undefined ? (theme === 'light' ? '#000000' : '#f3f4f6') : '#8fd3ff';
+
+  return (
+    <group position={[0.62, 1.13, 0.42]} {...interaction.bind}>
+      <group ref={tilt}>
+        <group ref={spinner}>
+          <LineLathe args={[topProfile, 48]} glow={glow} hovered={interaction.hovered} />
+          <Line
+            color={markerColor}
+            lineWidth={1.8}
+            points={[
+              [0.075, 0.432, 0],
+              [0.265, 0.365, 0],
+            ]}
+          />
+        </group>
+        <InteractionProxy args={[0.76, 0.9, 0.76]} position={[0, 0.4, 0]} />
+      </group>
     </group>
   );
 }
@@ -66,8 +175,8 @@ export function CoffeeTable() {
       <LineBox args={[3.82, 0.12, 1.32]} position={[0, 0.34, 0]} />
       <LineBox args={[3.98, 0.12, 0.12]} position={[0, 0.2, -0.62]} />
       <LineBox args={[3.98, 0.12, 0.12]} position={[0, 0.2, 0.62]} />
-      <LineCylinder args={[0.27, 0.27, 0.12, 22]} glow={moonGlow} position={[1.25, 1.19, -0.3]} />
       <GameController glow={moonGlow} />
+      <SpinningTop glow={moonGlow} />
     </group>
   );
 }

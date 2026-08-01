@@ -29,6 +29,7 @@ export type RoomObjectId =
   | 'desk-drawer'
   | 'office-chair'
   | 'sofa'
+  | 'spinning-top'
   | 'bed'
   | 'coffee'
   | 'plant'
@@ -56,6 +57,7 @@ export interface RoomObjectState {
   fanSpeed: 0 | 1 | 2;
   monitorOn: boolean;
   plantPulse: number;
+  topPulse: number;
   weatherDollPulse: number;
   windowOpen: boolean;
 }

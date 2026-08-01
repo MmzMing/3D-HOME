@@ -1,6 +1,7 @@
 import { Edges, Outlines, RoundedBox } from '@react-three/drei';
 import type { ThreeElements } from '@react-three/fiber';
 import type { PropsWithChildren } from 'react';
+import type { Vector2 } from 'three';
 
 import { GlowOutline, type GlowOutlineProps } from '@/scene/effects/glow-effects';
 import { useRoomStore } from '@/stores/room-store';
@@ -115,6 +116,21 @@ export function LineCylinder({
   return (
     <mesh {...props}>
       <cylinderGeometry args={args} />
+      <MaterialAndEdges accent={accent} glow={glow} hovered={hovered} />
+    </mesh>
+  );
+}
+
+export function LineLathe({
+  accent,
+  args,
+  glow,
+  hovered,
+  ...props
+}: ShapeProps & { args: [Vector2[], number?] }) {
+  return (
+    <mesh {...props}>
+      <latheGeometry args={args} />
       <MaterialAndEdges accent={accent} glow={glow} hovered={hovered} />
     </mesh>
   );

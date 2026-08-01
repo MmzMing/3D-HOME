@@ -25,6 +25,7 @@ export const roomObjects: readonly RoomObjectDefinition[] = [
   { id: 'desk-drawer', label: '书桌抽屉', zone: 'workspace' },
   { id: 'office-chair', label: '办公椅', zone: 'workspace' },
   { id: 'sofa', label: '广式木长椅', zone: 'lounge' },
+  { id: 'spinning-top', label: '盗梦陀螺', zone: 'lounge' },
   { id: 'bed', label: '床与枕头', zone: 'lounge' },
   { id: 'coffee', label: '咖啡', zone: 'workspace' },
   { id: 'plant', label: '植物', zone: 'workspace' },
@@ -156,6 +157,10 @@ export function activateRoomObject(id: RoomObjectId) {
       break;
     case 'sofa':
       room.pulseObject('cushionPulse');
+      sound('soft');
+      break;
+    case 'spinning-top':
+      room.pulseObject('topPulse');
       sound('soft');
       break;
     case 'bed':
