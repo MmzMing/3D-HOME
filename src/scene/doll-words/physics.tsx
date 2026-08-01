@@ -224,7 +224,7 @@ function PhysicsGlyph({
       canSleep
       colliders={false}
       angularDamping={2.8}
-      linearDamping={0.48}
+      linearDamping={0.05}
       name={`doll-word-${glyph.id}`}
       onSleep={() => {
         if (dynamic) onSleep(glyph.id);
@@ -508,7 +508,7 @@ function DollWordBodies() {
 
 export default function DollWordPhysics({ onReady }: { onReady: () => void }) {
   return (
-    <Physics colliders={false} gravity={[0, -16.5, 0]} timeStep={1 / 60} updateLoop="independent">
+    <Physics colliders={false} gravity={[0, -200, 0]} timeStep={1 / 60} updateLoop="independent">
       <FontWarmup onReady={onReady} />
       <StaticRoomColliders />
       <DollWordBodies />

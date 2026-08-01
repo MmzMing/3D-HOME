@@ -200,8 +200,8 @@ export function createBurstPlan(
       const rank = releaseRank.get(layoutIndex);
       return {
         ...glyph,
-        angularVelocity: [(random() - 0.5) * 4.2, (random() - 0.5) * 3.4, (random() - 0.5) * 5.2],
-        impulse: [(random() - 0.5) * 0.035, -0.024 - random() * 0.026, (random() - 0.5) * 0.024],
+        angularVelocity: [(random() - 0.5) * 12, (random() - 0.5) * 10, (random() - 0.5) * 15],
+        impulse: [(random() - 0.5) * 3, -4 - random() * 3, (random() - 0.5) * 2],
         releaseAfterMs:
           reducedMotion || rank === undefined
             ? null
@@ -221,7 +221,7 @@ export function createBurstPlan(
 }
 
 export function getDollWordLimits(mobile: boolean): DollWordLimits {
-  return mobile ? { activePhrases: 2, glyphs: 42 } : { activePhrases: 3, glyphs: 72 };
+  return mobile ? { activePhrases: 2, glyphs: 42 } : { activePhrases: 5, glyphs: 72 };
 }
 
 export function advanceTimelineGlyph(glyph: TimelineGlyph, now: number): TimelineGlyph {
