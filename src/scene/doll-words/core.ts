@@ -175,7 +175,7 @@ export function createBurstPlan(
 ): BurstPlan {
   const seed = hashDollWordSeed(id, phrase);
   const random = createSeededRandom(seed);
-  const fontSize = (mobile ? 0.68 : 0.86) + random() * (mobile ? 0.18 : 0.26);
+  const fontSize = (mobile ? 0.42 : 0.54) + random() * (mobile ? 0.14 : 0.18);
   const graphemes = segmentGraphemes(phrase);
   const graphemeCount = graphemes.length;
   const baseTypingIntervalMs = 65 + Math.floor(random() * 31);
@@ -188,7 +188,7 @@ export function createBurstPlan(
   const baseReleaseIntervalMs = 72 + Math.floor(random() * 48);
   const layout = layoutGraphemes(graphemes, {
     fontSize,
-    maxWidth: mobile ? 3.35 : 5.1,
+    maxWidth: mobile ? 6.2 : 9.0,
   });
   const physicalLayoutIndices = layout
     .map((glyph, index) => (glyph.isWhitespace ? -1 : index))
