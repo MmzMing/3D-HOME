@@ -17,7 +17,6 @@
   max-height: min(760px, calc(100dvh - 40px));
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid var(--border-strong);
   border-radius: 8px;
   background: var(--surface-solid);
   box-shadow: var(--shadow);

@@ -23,6 +23,7 @@ const weatherConfigSchema = z.object({
 const qweatherNowSchema = z.object({
   code: z.literal('200'),
   now: z.object({
+    cloud: z.string().min(1),
     feelsLike: z.string().min(1),
     humidity: z.string().min(1),
     icon: z.string().min(1),
@@ -42,9 +43,14 @@ const qweatherForecastSchema = z.object({
       z.object({
         fxDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
         iconDay: z.string().min(1),
+        precip: z.string().min(1),
+        pressure: z.string().min(1),
+        sunrise: z.string().min(1),
+        sunset: z.string().min(1),
         tempMax: z.string().min(1),
         tempMin: z.string().min(1),
         textDay: z.string().min(1),
+        uvIndex: z.string().min(1),
       }),
     )
     .length(7),
@@ -122,7 +128,8 @@ async function respondWithWeather(context: EdgeContext, geo: EdgeGeo) {
     }
 
     const place = location.data.location[0];
-    if (place === undefined) {
+    const today = forecast.data.daily[0];
+    if (place === undefined || today === undefined) {
       return failure('provider-unavailable', '天气数据暂时不可用。', requestId, true, 502);
     }
 
@@ -130,12 +137,20 @@ async function respondWithWeather(context: EdgeContext, geo: EdgeGeo) {
     const response = success(
       {
         current: {
+          cloud: current.data.now.cloud,
           feelsLike: current.data.now.feelsLike,
           humidity: current.data.now.humidity,
           icon: current.data.now.icon,
           observedAt: current.data.now.obsTime,
+          precip: today.precip,
+          pressure: today.pressure,
+          sunrise: today.sunrise,
+          sunset: today.sunset,
           temperature: current.data.now.temp,
+          temperatureMax: today.tempMax,
+          temperatureMin: today.tempMin,
           text: current.data.now.text,
+          uvIndex: today.uvIndex,
           visibility: current.data.now.vis,
           windDirection: current.data.now.windDir,
           windScale: current.data.now.windScale,

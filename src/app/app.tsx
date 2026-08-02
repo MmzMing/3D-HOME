@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { RoomLoader } from '@/components/common/room-loader';
 import { FeedDialog } from '@/features/feeds';
 import { DoorExitDialog } from '@/features/door-exit';
+import { GitHubDialog } from '@/features/github';
 import { LinkDialog } from '@/features/links';
 import { FloatingMusicPlayer, MusicBootstrap } from '@/features/music';
 import { ProfileDialog } from '@/features/profile';
@@ -85,6 +86,7 @@ function RoomExperience() {
       </section>
 
       <ProfileDialog />
+      <GitHubDialog />
       <DoorExitDialog />
       <LinkDialog />
       <FeedDialog />

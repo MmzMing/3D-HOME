@@ -4,12 +4,20 @@ import { requestApi } from '@/api/http';
 
 const weatherSchema = z.object({
   current: z.object({
+    cloud: z.string().min(1),
     feelsLike: z.string().min(1),
     humidity: z.string().min(1),
     icon: z.string().min(1),
     observedAt: z.iso.datetime({ offset: true }),
+    precip: z.string().min(1),
+    pressure: z.string().min(1),
+    sunrise: z.string().min(1),
+    sunset: z.string().min(1),
     temperature: z.string().min(1),
+    temperatureMax: z.string().min(1),
+    temperatureMin: z.string().min(1),
     text: z.string().min(1),
+    uvIndex: z.string().min(1),
     visibility: z.string().min(1),
     windDirection: z.string().min(1),
     windScale: z.string().min(1),

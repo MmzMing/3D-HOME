@@ -27,8 +27,8 @@
 
 :root[data-theme='dark'] {
   --background: #0b0d0f;
-  --surface: rgb(18 21 24 / 90%);
-  --surface-solid: #121518;
+  --surface: rgb(23 23 23 / 90%);
+  --surface-solid: #171717;
   --surface-muted: #1b2025;
   --ink: #f3f4f6;
   --muted: #abb2ba;

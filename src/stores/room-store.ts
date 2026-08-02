@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import { appConfig, feedsConfig, themeConfig } from '@/config';
-import type { CameraZone, PanelId, ProfileTab, RoomObjectState, ThemeMode } from '@/types/room';
+import type { CameraZone, PanelId, RoomObjectState, ThemeMode } from '@/types/room';
 import { readStorage, writeStorage } from '@/utils/storage';
 
 interface RoomState {
@@ -18,7 +18,6 @@ interface RoomState {
   isWeatherOpen: boolean;
   objectState: RoomObjectState;
   panel: PanelId;
-  profileTab: ProfileTab;
   selectedFeedId: string | null;
   selectedLinkId: string | null;
   theme: ThemeMode;
@@ -38,7 +37,6 @@ interface RoomState {
   setHoveredObject: (id: string | null) => void;
   setLinkClusterOpen: (open: boolean) => void;
   setObjectMenuOpen: (open: boolean) => void;
-  setProfileTab: (tab: ProfileTab) => void;
   setSoundEnabled: (enabled: boolean) => void;
   setWeatherOpen: (open: boolean) => void;
   toggleTheme: () => void;
@@ -94,7 +92,6 @@ export const useRoomStore = create<RoomState>((set) => ({
   isWeatherOpen: false,
   objectState: initialObjectState,
   panel: null,
-  profileTab: 'about',
   selectedFeedId: null,
   selectedLinkId: null,
   theme: initialTheme,
@@ -126,7 +123,6 @@ export const useRoomStore = create<RoomState>((set) => ({
   setHoveredObject: (hoveredObject) => set({ hoveredObject }),
   setLinkClusterOpen: (isLinkClusterOpen) => set({ isLinkClusterOpen }),
   setObjectMenuOpen: (isObjectMenuOpen) => set({ isObjectMenuOpen }),
-  setProfileTab: (profileTab) => set({ profileTab }),
   setSoundEnabled: (isSoundEnabled) => {
     writeStorage(themeConfig.soundStorageKey, isSoundEnabled ? 'enabled' : 'disabled');
     set({ isSoundEnabled });

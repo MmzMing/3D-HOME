@@ -2,9 +2,7 @@ export type ThemeMode = 'light' | 'dark';
 
 export type CameraZone = 'overview' | 'workspace' | 'lounge';
 
-export type PanelId = 'profile' | 'link' | 'feed' | 'music' | 'search' | null;
-
-export type ProfileTab = 'about' | 'github';
+export type PanelId = 'profile' | 'github' | 'link' | 'feed' | 'music' | 'search' | null;
 
 export type RoomCommand = 'overview' | 'open-profile' | 'focus-bookshelf' | 'open-music';
 

@@ -41,7 +41,6 @@ export function runRoomCommand(command: RoomCommand) {
   const room = useRoomStore.getState();
   if (command === 'overview') room.setCameraZone('overview');
   if (command === 'open-profile') {
-    room.setProfileTab('about');
     room.openPanel('profile');
   }
   if (command === 'focus-bookshelf') {
@@ -62,12 +61,10 @@ export function activateRoomObject(id: RoomObjectId) {
       sound();
       break;
     case 'laptop':
-      room.setProfileTab('github');
-      room.openPanel('profile');
+      room.openPanel('github');
       sound();
       break;
     case 'portrait':
-      room.setProfileTab('about');
       room.openPanel('profile');
       sound('soft');
       break;
