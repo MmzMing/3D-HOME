@@ -1,15 +1,6 @@
 {
   "author": "MmzMing",
   "description": "MmzMing 的个人主页：全干工程师、Java 与前端开发者，以及一个可交互的 3D 房间。",
-  "fallback": {
-    "heading": "MmzMing 的个人主页",
-    "intro": "欢迎来到 MmzMing 的个人主页，这里介绍个人项目、技术栈和常用链接。",
-    "notice": "这是一个可交互的 3D 房间，启用 JavaScript 后可以体验完整内容。",
-    "links": [
-      { "label": "GitHub", "url": "https://github.com/MmzMing" },
-      { "label": "博客", "url": "https://tblog.mmzhiku.xyz" }
-    ]
-  },
   "image": "/assets/images/profile/home1.webp",
   "siteName": "MmzMing 的个人主页",
   "socialDescription": "探索 MmzMing 的可交互 3D 房间，了解个人项目、技术栈与常用链接。",

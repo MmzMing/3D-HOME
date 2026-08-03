@@ -2,7 +2,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 
 import { RoomLoader } from '@/components/common/room-loader';
-import { siteConfig } from '@/config';
 import { FeedDialog } from '@/features/feeds';
 import { DoorExitDialog } from '@/features/door-exit';
 import { GitHubDialog } from '@/features/github';
@@ -62,8 +61,6 @@ function RoomExperience() {
 
   return (
     <main className="app-shell">
-      <h1 className="visually-hidden">{siteConfig.siteName}</h1>
-      <p className="visually-hidden">{siteConfig.description}</p>
       <section
         className="room-stage"
         data-revealed={roomRevealed ? 'true' : 'false'}

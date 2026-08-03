@@ -133,12 +133,6 @@ const searchSchema = z.object({
 const siteSchema = z.object({
   author: z.string().min(1),
   description: z.string().min(1),
-  fallback: z.object({
-    heading: z.string().min(1),
-    intro: z.string().min(1),
-    links: z.array(z.object({ label: z.string().min(1), url: httpsUrl })),
-    notice: z.string().min(1),
-  }),
   image: localAsset,
   siteName: z.string().min(1),
   socialDescription: z.string().min(1),

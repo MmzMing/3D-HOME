@@ -30,24 +30,6 @@ function escapeHtml(value: string) {
     .replaceAll("'", '&#39;');
 }
 
-function renderSiteFallback() {
-  const { fallback } = siteConfig;
-  const links = fallback.links
-    .map(({ label, url }) => `<a href="${escapeHtml(url)}">${escapeHtml(label)}</a>`)
-    .join('');
-
-  return [
-    '<main>',
-    `  <h1>${escapeHtml(fallback.heading)}</h1>`,
-    `  <p>${escapeHtml(fallback.intro)}</p>`,
-    `  <p>${escapeHtml(fallback.notice)}</p>`,
-    '  <nav aria-label="站点链接">',
-    `    ${links}`,
-    '  </nav>',
-    '</main>',
-  ].join('\n');
-}
-
 function siteSeo(): Plugin {
   const replacements = {
     __SITE_AUTHOR__: siteConfig.author,
@@ -61,7 +43,7 @@ function siteSeo(): Plugin {
   return {
     name: 'site-seo',
     transformIndexHtml(html) {
-      let transformed = html.replace('<!-- SITE_NOSCRIPT -->', renderSiteFallback());
+      let transformed = html;
       Object.entries(replacements).forEach(([token, value]) => {
         transformed = transformed.replaceAll(token, escapeHtml(value));
       });
