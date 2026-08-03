@@ -6,6 +6,7 @@ import linksData from './links.json';
 import musicData from './music.json';
 import profileData from './profile.json';
 import searchData from './search.json';
+import siteData from './site.json';
 import siteRecordsData from './site-records.json';
 import themeData from './theme.json';
 import weatherData from './weather.json';
@@ -129,6 +130,21 @@ const searchSchema = z.object({
   ),
 });
 
+const siteSchema = z.object({
+  author: z.string().min(1),
+  description: z.string().min(1),
+  fallback: z.object({
+    heading: z.string().min(1),
+    intro: z.string().min(1),
+    links: z.array(z.object({ label: z.string().min(1), url: httpsUrl })),
+    notice: z.string().min(1),
+  }),
+  image: localAsset,
+  siteName: z.string().min(1),
+  socialDescription: z.string().min(1),
+  title: z.string().min(1),
+});
+
 const siteRecordLinkSchema = z.object({
   label: z.string().min(1),
   url: httpsUrl,
@@ -158,6 +174,7 @@ export const linksConfig = z.array(linkSchema).parse(linksData);
 export const musicConfig = musicSchema.parse(musicData);
 export const profileConfig = profileSchema.parse(profileData);
 export const searchConfig = searchSchema.parse(searchData);
+export const siteConfig = siteSchema.parse(siteData);
 export const siteRecordsConfig = siteRecordsSchema.parse(siteRecordsData);
 export const themeConfig = themeSchema.parse(themeData);
 export const weatherConfig = weatherSchema.parse(weatherData);
@@ -167,3 +184,4 @@ export type LinkConfig = z.infer<typeof linkSchema>;
 export type MusicConfig = z.infer<typeof musicSchema>;
 export type ProfileConfig = z.infer<typeof profileSchema>;
 export type SearchConfig = z.infer<typeof searchSchema>;
+export type SiteConfig = z.infer<typeof siteSchema>;

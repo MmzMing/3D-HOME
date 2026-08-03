@@ -19,3 +19,5 @@ corepack pnpm build
 ```
 
 GitHub 与和风天气密钥仅配置在 EdgeOne 环境变量中，参考 `.env.example`。浏览器只访问同源 `/api/*`。
+
+SEO 元信息统一维护在 `src/config/site.json`。`/robots.txt` 与 `/sitemap.xml` 由边缘函数按当前请求域名生成，不需要配置站点域名环境变量。

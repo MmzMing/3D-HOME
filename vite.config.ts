@@ -4,6 +4,8 @@ import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 
 import { dispatchApiRequest } from './src/api/edge/router.ts';
+import { handleRobotsGet, handleSitemapGet } from './src/api/edge/seo.ts';
+import siteConfig from './src/config/site.json' with { type: 'json' };
 
 function readRequestBody(request: IncomingMessage) {
   return new Promise<string>((resolve, reject) => {
@@ -19,6 +21,62 @@ function readRequestBody(request: IncomingMessage) {
   });
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function renderSiteFallback() {
+  const { fallback } = siteConfig;
+  const links = fallback.links
+    .map(({ label, url }) => `<a href="${escapeHtml(url)}">${escapeHtml(label)}</a>`)
+    .join('');
+
+  return [
+    '<main>',
+    `  <h1>${escapeHtml(fallback.heading)}</h1>`,
+    `  <p>${escapeHtml(fallback.intro)}</p>`,
+    `  <p>${escapeHtml(fallback.notice)}</p>`,
+    '  <nav aria-label="站点链接">',
+    `    ${links}`,
+    '  </nav>',
+    '</main>',
+  ].join('\n');
+}
+
+function siteSeo(): Plugin {
+  const replacements = {
+    __SITE_AUTHOR__: siteConfig.author,
+    __SITE_DESCRIPTION__: siteConfig.description,
+    __SITE_IMAGE__: siteConfig.image,
+    __SITE_NAME__: siteConfig.siteName,
+    __SITE_SOCIAL_DESCRIPTION__: siteConfig.socialDescription,
+    __SITE_TITLE__: siteConfig.title,
+  };
+
+  return {
+    name: 'site-seo',
+    transformIndexHtml(html) {
+      let transformed = html.replace('<!-- SITE_NOSCRIPT -->', renderSiteFallback());
+      Object.entries(replacements).forEach(([token, value]) => {
+        transformed = transformed.replaceAll(token, escapeHtml(value));
+      });
+      return transformed;
+    },
+  };
+}
+
+function dispatchLocalEdgeRequest(context: Parameters<typeof dispatchApiRequest>[0]) {
+  const pathname = new URL(context.request.url).pathname;
+  if (pathname === '/robots.txt') return handleRobotsGet(context);
+  if (pathname === '/sitemap.xml') return handleSitemapGet(context);
+  return dispatchApiRequest(context);
+}
+
 function localEdgeApi(env: Record<string, string | undefined>): Plugin {
   return {
     name: 'local-edge-api',
@@ -26,9 +84,15 @@ function localEdgeApi(env: Record<string, string | undefined>): Plugin {
       server.middlewares.use((request, response, next) => {
         void (async () => {
           const relativeUrl = request.url;
+          if (relativeUrl === undefined) {
+            next();
+            return;
+          }
+          const pathname = new URL(relativeUrl, 'http://127.0.0.1').pathname;
           if (
-            relativeUrl === undefined ||
-            !new URL(relativeUrl, 'http://127.0.0.1').pathname.startsWith('/api/')
+            pathname !== '/robots.txt' &&
+            pathname !== '/sitemap.xml' &&
+            !pathname.startsWith('/api/')
           ) {
             next();
             return;
@@ -42,12 +106,14 @@ function localEdgeApi(env: Record<string, string | undefined>): Plugin {
           });
           const body =
             method === 'GET' || method === 'HEAD' ? undefined : await readRequestBody(request);
-          const edgeRequest = new Request(new URL(relativeUrl, 'http://127.0.0.1'), {
+          const protocol = headers.get('x-forwarded-proto') ?? 'http';
+          const host = headers.get('host') ?? '127.0.0.1';
+          const edgeRequest = new Request(new URL(relativeUrl, `${protocol}://${host}`), {
             body,
             headers,
             method,
           });
-          const edgeResponse = await dispatchApiRequest({
+          const edgeResponse = await dispatchLocalEdgeRequest({
             env,
             request: edgeRequest,
             waitUntil: (promise) => {
@@ -67,7 +133,7 @@ export default defineConfig(({ mode }) => {
   const edgeEnv = { ...process.env, ...loadEnv(mode, process.cwd(), '') };
 
   return {
-    plugins: [react(), localEdgeApi(edgeEnv)],
+    plugins: [react(), localEdgeApi(edgeEnv), siteSeo()],
     resolve: { tsconfigPaths: true },
     build: {
       // The 3D runtime is intentionally shipped as one vendor chunk.
