@@ -136,15 +136,15 @@
   }
 
   .floating-player {
-    grid-template-columns: 76px minmax(0, 1fr);
-    gap: 9px;
+    grid-template-columns: 68px minmax(0, 1fr);
+    gap: 8px;
     padding: 8px;
   }
 
   .floating-player-cover,
   .floating-player-cover-placeholder {
-    width: 76px;
-    height: 76px;
+    width: 68px;
+    height: 68px;
   }
 
   .floating-track-meta strong {
@@ -157,8 +157,15 @@
   }
 
   .floating-player-controls {
-    justify-content: space-between;
-    gap: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2px;
+  }
+
+  .floating-player-controls .floating-player-button {
+    width: 40px;
+    height: 40px;
+    justify-self: center;
   }
 
   .floating-player-volume {
@@ -230,7 +237,7 @@
   }
 
   .profile-card-heading h2 {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   .github-summary {

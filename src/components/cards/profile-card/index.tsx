@@ -19,7 +19,6 @@ export function ProfileCard({ profile }: { profile: ProfileConfig }) {
       <div className="profile-card-heading">
         <img src={profile.avatar} alt={`${profile.name} 的头像`} />
         <div>
-          <p className="eyebrow">ABOUT</p>
           <h2 id="profile-card-title">{profile.name}</h2>
           <strong>{profile.intro.role}</strong>
         </div>

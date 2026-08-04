@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import {
   Captions,
   ListMusic,
+  Lock,
+  Minimize2,
   Music2,
   Pause,
   Play,
@@ -10,6 +12,7 @@ import {
   Shuffle,
   SkipBack,
   SkipForward,
+  Unlock,
   Volume2,
   X,
 } from 'lucide-react';
@@ -67,6 +70,7 @@ export function FloatingMusicPlayer() {
   const showLyrics = usePlayerStore((state) => state.showLyrics);
   const toggleLyrics = usePlayerStore((state) => state.toggleLyrics);
   const [isCollapsed, setCollapsed] = useState(false);
+  const [isAutoCollapseLocked, setAutoCollapseLocked] = useState(false);
   const [isVolumeOpen, setVolumeOpen] = useState(false);
   const collapseTimerRef = useRef<number | null>(null);
   const playerStackRef = useRef<HTMLDivElement>(null);
@@ -87,12 +91,12 @@ export function FloatingMusicPlayer() {
 
   const scheduleAutoCollapse = useCallback(() => {
     clearAutoCollapse();
-    if (!player.hasStarted || isPlaylistOpen || isVolumeOpen) return;
+    if (!player.hasStarted || isAutoCollapseLocked || isPlaylistOpen || isVolumeOpen) return;
     collapseTimerRef.current = window.setTimeout(() => {
       setCollapsed(true);
       collapseTimerRef.current = null;
     }, AUTO_COLLAPSE_DELAY);
-  }, [clearAutoCollapse, isPlaylistOpen, isVolumeOpen, player.hasStarted]);
+  }, [clearAutoCollapse, isAutoCollapseLocked, isPlaylistOpen, isVolumeOpen, player.hasStarted]);
 
   const closePlaylistAndKeepExpanded = useCallback(() => {
     setCollapsed(false);
@@ -130,13 +134,20 @@ export function FloatingMusicPlayer() {
   }, [closePlaylistAndKeepExpanded, isPlaylistOpen]);
 
   useEffect(() => {
-    if (!player.hasStarted || isPlaylistOpen || isVolumeOpen) {
+    if (!player.hasStarted || isAutoCollapseLocked || isPlaylistOpen || isVolumeOpen) {
       clearAutoCollapse();
       return;
     }
     scheduleAutoCollapse();
     return clearAutoCollapse;
-  }, [clearAutoCollapse, isPlaylistOpen, isVolumeOpen, player.hasStarted, scheduleAutoCollapse]);
+  }, [
+    clearAutoCollapse,
+    isAutoCollapseLocked,
+    isPlaylistOpen,
+    isVolumeOpen,
+    player.hasStarted,
+    scheduleAutoCollapse,
+  ]);
 
   if (!player.hasStarted && !isPlaylistOpen) return null;
 
@@ -293,6 +304,37 @@ export function FloatingMusicPlayer() {
                 }}
               >
                 <ListMusic aria-hidden="true" size={20} />
+              </button>
+              <button
+                type="button"
+                className="floating-player-button"
+                aria-label="收缩为唱片"
+                title="收缩为唱片"
+                onClick={() => {
+                  clearAutoCollapse();
+                  setVolumeOpen(false);
+                  if (isPlaylistOpen) closePanel();
+                  setCollapsed(true);
+                }}
+              >
+                <Minimize2 aria-hidden="true" size={20} />
+              </button>
+              <button
+                type="button"
+                className="floating-player-button"
+                aria-label={
+                  isAutoCollapseLocked ? '取消固定，恢复自动收缩' : '固定播放器，禁止自动收缩'
+                }
+                aria-pressed={isAutoCollapseLocked}
+                title={isAutoCollapseLocked ? '取消固定，恢复自动收缩' : '固定播放器，禁止自动收缩'}
+                data-active={isAutoCollapseLocked ? 'true' : 'false'}
+                onClick={() => setAutoCollapseLocked((locked) => !locked)}
+              >
+                {isAutoCollapseLocked ? (
+                  <Lock aria-hidden="true" size={19} />
+                ) : (
+                  <Unlock aria-hidden="true" size={19} />
+                )}
               </button>
             </div>
 
