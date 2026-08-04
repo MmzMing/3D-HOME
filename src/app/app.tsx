@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 
 import { RoomLoader } from '@/components/common/room-loader';
 import { FeedDialog } from '@/features/feeds';
@@ -10,7 +10,10 @@ import { FloatingMusicPlayer, MusicBootstrap } from '@/features/music';
 import { ProfileDialog } from '@/features/profile';
 import { SearchDialog } from '@/features/search';
 import { WeatherPopover } from '@/features/weather';
+import { useMediaQuery } from '@/hooks/use-media-query';
 import { RoomCanvas, RoomFallback } from '@/scene';
+import { useRoomStore } from '@/stores/room-store';
+import type { CameraFocus, PanelId } from '@/types/room';
 import { preloadProfileAudio } from '@/utils/room-audio';
 import { supportsWebGL } from '@/utils/webgl';
 
@@ -29,6 +32,15 @@ function createQueryClient() {
   });
 }
 
+type CameraFocusTarget = Exclude<CameraFocus, null>;
+
+const panelCameraFocuses: Partial<Record<Exclude<PanelId, null>, CameraFocusTarget>> = {
+  feed: 'bookshelf',
+  github: 'laptop',
+  profile: 'portrait',
+  search: 'keyboard',
+};
+
 function RoomExperience() {
   const [hasWebGL] = useState(supportsWebGL);
   const [canvasReady, setCanvasReady] = useState(!hasWebGL);
@@ -37,10 +49,31 @@ function RoomExperience() {
   const [roomRevealed, setRoomRevealed] = useState(false);
   const [roomSettled, setRoomSettled] = useState(false);
   const [sceneReady, setSceneReady] = useState(!hasWebGL);
+  const panel = useRoomStore((state) => state.panel);
+  const isDoorExitPromptOpen = useRoomStore((state) => state.isDoorExitPromptOpen);
+  const isWeatherOpen = useRoomStore((state) => state.isWeatherOpen);
+  const focusObject = useRoomStore((state) => state.focusObject);
+  const restoreCameraFocus = useRoomStore((state) => state.restoreCameraFocus);
+  const isDesktop = useMediaQuery('(min-width: 720px)');
   const markCanvasReady = useCallback(() => setCanvasReady(true), []);
   const markDollWordsReady = useCallback(() => setDollWordsReady(true), []);
   const revealRoom = useCallback(() => setRoomRevealed(true), []);
   const markSceneReady = useCallback(() => setSceneReady(true), []);
+  const activeCameraFocus = isDoorExitPromptOpen
+    ? 'door'
+    : isWeatherOpen
+      ? 'weather'
+      : panel === null
+        ? null
+        : (panelCameraFocuses[panel] ?? null);
+
+  useLayoutEffect(() => {
+    if (!isDesktop || activeCameraFocus === null) {
+      restoreCameraFocus();
+      return;
+    }
+    focusObject(activeCameraFocus);
+  }, [activeCameraFocus, focusObject, isDesktop, restoreCameraFocus]);
 
   useEffect(() => {
     if (!hasWebGL) return;

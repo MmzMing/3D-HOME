@@ -1,10 +1,14 @@
 import { create } from 'zustand';
 
 import { appConfig, feedsConfig, themeConfig } from '@/config';
-import type { CameraZone, PanelId, RoomObjectState, ThemeMode } from '@/types/room';
+import type { CameraFocus, CameraZone, PanelId, RoomObjectState, ThemeMode } from '@/types/room';
 import { readStorage, writeStorage } from '@/utils/storage';
 
+type CameraFocusTarget = Exclude<CameraFocus, null>;
+
 interface RoomState {
+  cameraFocus: CameraFocus;
+  focusReturnZone: CameraZone | null;
   cameraZone: CameraZone;
   dollWordBurst: { id: number; phrase: string } | null;
   dollWordClearRevision: number;
@@ -23,6 +27,8 @@ interface RoomState {
   theme: ThemeMode;
   closePanel: () => void;
   clearDollWords: () => void;
+  focusObject: (focus: CameraFocusTarget) => void;
+  focusPortrait: () => void;
   openDoorExitPrompt: () => void;
   refreshDoorExitLink: () => void;
   setDoorExitPromptOpen: (open: boolean) => void;
@@ -33,6 +39,7 @@ interface RoomState {
   openPanel: (panel: Exclude<PanelId, 'feed' | 'link' | null>) => void;
   patchObjectState: (patch: Partial<RoomObjectState>) => void;
   pulseObject: (key: 'cushionPulse' | 'plantPulse' | 'topPulse' | 'weatherDollPulse') => void;
+  restoreCameraFocus: () => void;
   setCameraZone: (zone: CameraZone) => void;
   setHoveredObject: (id: string | null) => void;
   setLinkClusterOpen: (open: boolean) => void;
@@ -79,6 +86,8 @@ function randomDoorExitFeedId(currentId: string | null) {
 }
 
 export const useRoomStore = create<RoomState>((set) => ({
+  cameraFocus: null,
+  focusReturnZone: null,
   cameraZone: appConfig.defaultCameraZone,
   dollWordBurst: null,
   dollWordClearRevision: 0,
@@ -98,28 +107,88 @@ export const useRoomStore = create<RoomState>((set) => ({
   closePanel: () => set({ panel: null, selectedFeedId: null, selectedLinkId: null }),
   clearDollWords: () =>
     set((state) => ({ dollWordClearRevision: state.dollWordClearRevision + 1, dollWordCount: 0 })),
+  focusObject: (cameraFocus) =>
+    set((state) => ({
+      cameraFocus,
+      focusReturnZone: state.cameraFocus === null ? state.cameraZone : state.focusReturnZone,
+    })),
+  focusPortrait: () =>
+    set((state) => ({
+      cameraFocus: 'portrait',
+      focusReturnZone: state.cameraFocus === null ? state.cameraZone : state.focusReturnZone,
+    })),
   openDoorExitPrompt: () =>
     set((state) => ({
       doorExitFeedId: randomDoorExitFeedId(state.doorExitFeedId),
       isDoorExitPromptOpen: true,
+      isWeatherOpen: false,
+      objectState: { ...state.objectState, doorOpen: true },
+      panel: null,
+      selectedFeedId: null,
+      selectedLinkId: null,
     })),
   refreshDoorExitLink: () =>
     set((state) => ({ doorExitFeedId: randomDoorExitFeedId(state.doorExitFeedId) })),
-  setDoorExitPromptOpen: (isDoorExitPromptOpen) => set({ isDoorExitPromptOpen }),
+  setDoorExitPromptOpen: (isDoorExitPromptOpen) =>
+    set((state) => ({
+      isDoorExitPromptOpen,
+      objectState: { ...state.objectState, doorOpen: isDoorExitPromptOpen },
+    })),
   releaseDollWords: (phrase) =>
     set((state) => ({
       dollWordBurst: { id: (state.dollWordBurst?.id ?? 0) + 1, phrase },
     })),
   setDollWordCount: (dollWordCount) =>
     set({ dollWordCount: Math.max(0, Math.floor(dollWordCount)) }),
-  openFeed: (selectedFeedId) => set({ panel: 'feed', selectedFeedId }),
-  openLink: (selectedLinkId) => set({ panel: 'link', selectedLinkId }),
-  openPanel: (panel) => set({ panel }),
+  openFeed: (selectedFeedId) =>
+    set((state) => ({
+      isDoorExitPromptOpen: false,
+      isWeatherOpen: false,
+      objectState: { ...state.objectState, doorOpen: false },
+      panel: 'feed',
+      selectedFeedId,
+      selectedLinkId: null,
+    })),
+  openLink: (selectedLinkId) =>
+    set((state) => ({
+      isDoorExitPromptOpen: false,
+      isWeatherOpen: false,
+      objectState: { ...state.objectState, doorOpen: false },
+      panel: 'link',
+      selectedFeedId: null,
+      selectedLinkId,
+    })),
+  openPanel: (panel) =>
+    set((state) => ({
+      isDoorExitPromptOpen: false,
+      isWeatherOpen: false,
+      objectState: { ...state.objectState, doorOpen: false },
+      panel,
+      selectedFeedId: null,
+      selectedLinkId: null,
+    })),
   patchObjectState: (patch) =>
     set((state) => ({ objectState: { ...state.objectState, ...patch } })),
   pulseObject: (key) =>
     set((state) => ({ objectState: { ...state.objectState, [key]: state.objectState[key] + 1 } })),
-  setCameraZone: (cameraZone) => set({ cameraZone }),
+  restoreCameraFocus: () =>
+    set((state) => ({
+      cameraFocus: null,
+      cameraZone: state.focusReturnZone ?? state.cameraZone,
+      focusReturnZone: null,
+    })),
+  setCameraZone: (cameraZone) =>
+    set((state) => ({
+      cameraFocus: null,
+      cameraZone,
+      focusReturnZone: null,
+      isDoorExitPromptOpen: false,
+      isWeatherOpen: false,
+      objectState: { ...state.objectState, doorOpen: false },
+      panel: null,
+      selectedFeedId: null,
+      selectedLinkId: null,
+    })),
   setHoveredObject: (hoveredObject) => set({ hoveredObject }),
   setLinkClusterOpen: (isLinkClusterOpen) => set({ isLinkClusterOpen }),
   setObjectMenuOpen: (isObjectMenuOpen) => set({ isObjectMenuOpen }),
@@ -127,7 +196,17 @@ export const useRoomStore = create<RoomState>((set) => ({
     writeStorage(themeConfig.soundStorageKey, isSoundEnabled ? 'enabled' : 'disabled');
     set({ isSoundEnabled });
   },
-  setWeatherOpen: (isWeatherOpen) => set({ isWeatherOpen }),
+  setWeatherOpen: (isWeatherOpen) =>
+    isWeatherOpen
+      ? set((state) => ({
+          isDoorExitPromptOpen: false,
+          isWeatherOpen: true,
+          objectState: { ...state.objectState, doorOpen: false },
+          panel: null,
+          selectedFeedId: null,
+          selectedLinkId: null,
+        }))
+      : set({ isWeatherOpen: false }),
   toggleTheme: () =>
     set((state) => {
       const theme = state.theme === 'light' ? 'dark' : 'light';

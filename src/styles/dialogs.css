@@ -29,6 +29,143 @@
   width: min(620px, calc(100vw - 40px));
 }
 
+.profile-showcase {
+  position: fixed;
+  z-index: calc(var(--z-dialog) + 1);
+  top: 50%;
+  right: clamp(16px, 3vw, 48px);
+  display: flex;
+  width: clamp(320px, 36vw, 540px);
+  max-height: min(820px, calc(100dvh - 32px));
+  flex-direction: column;
+  overflow: hidden;
+  border: 0;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface-solid) 96%, transparent);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  transform: translateY(-50%);
+  animation: profile-showcase-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  backdrop-filter: blur(16px);
+}
+
+.profile-showcase-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-showcase-header h2 {
+  margin-bottom: 5px;
+  font-family: var(--font-pixel);
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.profile-showcase-header p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.profile-showcase-body {
+  min-height: 0;
+  padding: 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.object-showcase {
+  position: fixed;
+  z-index: calc(var(--z-dialog) + 1);
+  top: 50%;
+  right: clamp(16px, 3vw, 48px);
+  display: flex;
+  width: min(540px, calc(100vw - 32px), 40vw);
+  max-height: min(820px, calc(100dvh - 32px));
+  flex-direction: column;
+  overflow: hidden;
+  border: 0;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface-solid) 96%, transparent);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  transform: translateY(-50%);
+  animation: object-showcase-in-right 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  backdrop-filter: blur(16px);
+}
+
+.object-showcase[data-layout='laptop-split'],
+.object-showcase[data-layout='bookshelf-split'] {
+  right: auto;
+  left: clamp(16px, 3vw, 48px);
+  width: min(560px, calc(100vw - 32px), 42vw);
+  animation-name: object-showcase-in-left;
+}
+
+.object-showcase[data-layout='bookshelf-split'] {
+  width: min(680px, calc(100vw - 32px), 46vw);
+}
+
+.object-showcase[data-layout='weather-split'] {
+  width: min(720px, calc(100vw - 32px), 48vw);
+}
+
+.object-showcase[data-layout='keyboard-stack'],
+.object-showcase[data-layout='door-bottom'] {
+  top: auto;
+  right: auto;
+  bottom: clamp(16px, 4vh, 42px);
+  left: 50%;
+  width: min(620px, calc(100vw - 32px), 46vw);
+  max-height: min(52dvh, calc(100dvh - 32px));
+  transform: translateX(-50%);
+  animation-name: object-showcase-in-bottom;
+}
+
+.object-showcase[data-layout='door-bottom'] {
+  width: min(480px, calc(100vw - 32px), 36vw);
+  max-height: min(42dvh, calc(100dvh - 32px));
+}
+
+.object-showcase-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 20px 15px;
+  border-bottom: 1px solid var(--border);
+}
+
+.object-showcase-header h2 {
+  margin-bottom: 5px;
+  font-family: var(--font-pixel);
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.object-showcase-header p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.object-showcase-body {
+  min-height: 0;
+  padding: 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.object-showcase[data-layout='keyboard-stack'] .object-showcase-body,
+.object-showcase[data-layout='weather-split'] .object-showcase-body,
+.object-showcase[data-layout='door-bottom'] .object-showcase-body {
+  padding-bottom: 22px;
+}
+
 .dialog-header {
   display: flex;
   align-items: flex-start;
@@ -138,6 +275,34 @@
   from {
     opacity: 0;
     transform: translate(-50%, calc(-50% + 14px));
+  }
+}
+
+@keyframes profile-showcase-in {
+  from {
+    opacity: 0;
+    transform: translate(18px, -50%);
+  }
+}
+
+@keyframes object-showcase-in-right {
+  from {
+    opacity: 0;
+    transform: translate(18px, -50%);
+  }
+}
+
+@keyframes object-showcase-in-left {
+  from {
+    opacity: 0;
+    transform: translate(-18px, -50%);
+  }
+}
+
+@keyframes object-showcase-in-bottom {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 18px);
   }
 }
 

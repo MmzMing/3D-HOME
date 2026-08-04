@@ -2,7 +2,9 @@ import { Code2, ExternalLink, Globe2, Image, Music2, Search } from 'lucide-react
 import { useMemo, useState } from 'react';
 
 import { ModalShell } from '@/components/common/modal-shell';
+import { ObjectShowcase } from '@/components/common/object-showcase';
 import { searchConfig } from '@/config';
+import { useMediaQuery } from '@/hooks/use-media-query';
 import { useRoomStore } from '@/stores/room-store';
 import { runRoomCommand } from '@/utils/room-commands';
 import { searchDocuments, type SearchDocument } from '@/utils/search-index';
@@ -20,6 +22,7 @@ export function SearchDialog() {
   const closePanel = useRoomStore((state) => state.closePanel);
   const openFeed = useRoomStore((state) => state.openFeed);
   const openLink = useRoomStore((state) => state.openLink);
+  const isDesktop = useMediaQuery('(min-width: 720px)');
   const fallback = searchConfig.scopes[0];
   const [scopeId, setScopeId] = useState(fallback?.id ?? '');
   const [query, setQuery] = useState('');
@@ -47,15 +50,8 @@ export function SearchDialog() {
     );
   }
 
-  return (
-    <ModalShell
-      open={panel === 'search'}
-      onOpenChange={(open) => {
-        if (!open) closePanel();
-      }}
-      title="搜索终端"
-      description="站内内容与外部搜索"
-    >
+  const content = (
+    <>
       <div className="search-scopes" role="tablist" aria-label="搜索分类">
         {searchConfig.scopes.map((item) => {
           const Icon = icons[item.icon as keyof typeof icons];
@@ -134,6 +130,36 @@ export function SearchDialog() {
           )}
         </section>
       ) : null}
+    </>
+  );
+
+  const open = panel === 'search';
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) closePanel();
+  };
+
+  if (isDesktop) {
+    return (
+      <ObjectShowcase
+        layout="keyboard-stack"
+        open={open}
+        onOpenChange={handleOpenChange}
+        title="搜索终端"
+        description="站内内容与外部搜索"
+      >
+        {content}
+      </ObjectShowcase>
+    );
+  }
+
+  return (
+    <ModalShell
+      open={open}
+      onOpenChange={handleOpenChange}
+      title="搜索终端"
+      description="站内内容与外部搜索"
+    >
+      {content}
     </ModalShell>
   );
 }

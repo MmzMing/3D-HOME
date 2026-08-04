@@ -203,6 +203,28 @@
     padding: 18px 16px max(20px, env(safe-area-inset-bottom));
   }
 
+  .door-exit-actions {
+    flex-wrap: wrap;
+  }
+
+  .weather-top-main {
+    gap: 10px;
+  }
+
+  .weather-top-main strong {
+    font-size: 42px;
+  }
+
+  .weather-place-row {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 4px 10px;
+  }
+
+  .weather-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .weather-forecast {
     grid-template-columns: minmax(0, 1fr);
     gap: 2px;
@@ -227,8 +249,8 @@
   }
 
   .profile-card-heading {
-    grid-template-columns: 78px 1fr;
-    gap: 14px;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .profile-card-heading img {

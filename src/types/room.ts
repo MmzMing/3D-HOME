@@ -1,6 +1,8 @@
 export type ThemeMode = 'light' | 'dark';
 
 export type CameraZone = 'overview' | 'workspace' | 'lounge';
+export type CameraFocus =
+  'portrait' | 'keyboard' | 'laptop' | 'bookshelf' | 'weather' | 'door' | null;
 
 export type PanelId = 'profile' | 'github' | 'link' | 'feed' | 'music' | 'search' | null;
 

@@ -4,31 +4,28 @@ import { ExternalLink } from 'lucide-react';
 import { getFeed } from '@/api';
 import { FeedArticleCard } from '@/components/cards/feed-article-card';
 import { ModalShell } from '@/components/common/modal-shell';
+import { ObjectShowcase } from '@/components/common/object-showcase';
 import { ErrorStatus, LoadingStatus } from '@/components/common/status-view';
 import { feedsConfig } from '@/config';
+import { useMediaQuery } from '@/hooks/use-media-query';
 import { useRoomStore } from '@/stores/room-store';
 
 export function FeedDialog() {
   const panel = useRoomStore((state) => state.panel);
   const feedId = useRoomStore((state) => state.selectedFeedId);
   const closePanel = useRoomStore((state) => state.closePanel);
+  const isDesktop = useMediaQuery('(min-width: 720px)');
   const feed = feedsConfig.find((item) => item.id === feedId);
+  const open = panel === 'feed' && feed !== undefined;
   const query = useQuery({
-    enabled: panel === 'feed' && feed !== undefined,
+    enabled: open,
     queryFn: () => getFeed(feedId ?? ''),
     queryKey: ['feed', feedId],
     staleTime: 10 * 60_000,
   });
 
-  return (
-    <ModalShell
-      open={panel === 'feed' && feed !== undefined}
-      onOpenChange={(open) => {
-        if (!open) closePanel();
-      }}
-      title={feed?.name ?? 'RSS'}
-      description="从书架取出的最新文章"
-    >
+  const content = (
+    <>
       {feed === undefined ? null : (
         <div className="feed-source-heading">
           <div>
@@ -58,6 +55,36 @@ export function FeedDialog() {
           ))}
         </div>
       )}
+    </>
+  );
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) closePanel();
+  };
+
+  if (isDesktop) {
+    return (
+      <ObjectShowcase
+        dismissOnOutside={false}
+        layout="bookshelf-split"
+        open={open}
+        onOpenChange={handleOpenChange}
+        title={feed?.name ?? 'RSS'}
+        description="从书架取出的最新文章"
+      >
+        {content}
+      </ObjectShowcase>
+    );
+  }
+
+  return (
+    <ModalShell
+      open={open}
+      onOpenChange={handleOpenChange}
+      title={feed?.name ?? 'RSS'}
+      description="从书架取出的最新文章"
+    >
+      {content}
     </ModalShell>
   );
 }
