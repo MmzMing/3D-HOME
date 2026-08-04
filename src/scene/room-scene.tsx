@@ -26,9 +26,16 @@ import { CameraRig } from '@/scene/camera-rig';
 import { RoomShell } from '@/scene/room-shell';
 import { SceneTicker } from '@/scene/scene-ticker';
 import { RoomPostprocessing } from '@/scene/effects/room-postprocessing';
+import { RoomLineReveal } from '@/scene/effects/line-reveal';
 import { DollWordLayer } from '@/scene/doll-words/layer';
 
-export function RoomScene({ onDollWordsReady }: { onDollWordsReady: () => void }) {
+interface RoomSceneProps {
+  onDollWordsReady: () => void;
+  onRevealComplete: () => void;
+  revealActive: boolean;
+}
+
+export function RoomScene({ onDollWordsReady, onRevealComplete, revealActive }: RoomSceneProps) {
   return (
     <>
       <CameraRig />
@@ -62,6 +69,7 @@ export function RoomScene({ onDollWordsReady }: { onDollWordsReady: () => void }
       </group>
       <DollWordLayer onReady={onDollWordsReady} />
       <RoomPostprocessing />
+      <RoomLineReveal active={revealActive} onComplete={onRevealComplete} />
     </>
   );
 }

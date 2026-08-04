@@ -5,6 +5,7 @@ import { AdditiveBlending, Color, MathUtils, type Group, type ShaderMaterial } f
 
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { FeatheredGlow } from '@/scene/effects/glow-effects';
+import { getRoomRevealFade } from '@/scene/effects/line-reveal';
 import { InteractionProxy, LineBox, LinePlane } from '@/scene/primitives/line-shape';
 import { useRoomInteraction } from '@/scene/primitives/use-room-interaction';
 import { useRoomStore } from '@/stores/room-store';
@@ -85,17 +86,19 @@ function MoonDust({ active, reducedMotion }: { active: boolean; reducedMotion: b
   const uniforms = useMemo(
     () => ({
       uColor: { value: new Color('#d7f2ff') },
-      uOpacity: { value: 0.48 },
+      uOpacity: { value: active ? 0.48 * getRoomRevealFade() : 0 },
       uPointSize: { value: mobile ? 2.15 : 2.45 },
       uTime: { value: 0 },
     }),
-    [mobile],
+    [active, mobile],
   );
 
   useFrame((state) => {
     const shader = material.current;
     if (!active || shader === null) return;
+    const opacityUniform = shader.uniforms.uOpacity;
     const timeUniform = shader.uniforms.uTime;
+    if (opacityUniform !== undefined) opacityUniform.value = 0.48 * getRoomRevealFade();
     if (timeUniform !== undefined) timeUniform.value = reducedMotion ? 0 : state.clock.elapsedTime;
   });
 

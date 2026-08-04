@@ -47,6 +47,7 @@ function RoomExperience() {
   const [dollWordsReady, setDollWordsReady] = useState(!hasWebGL);
   const [profileAudioReady, setProfileAudioReady] = useState(!hasWebGL);
   const [roomRevealed, setRoomRevealed] = useState(false);
+  const [roomDrawing, setRoomDrawing] = useState(false);
   const [roomSettled, setRoomSettled] = useState(false);
   const [sceneReady, setSceneReady] = useState(!hasWebGL);
   const panel = useRoomStore((state) => state.panel);
@@ -57,7 +58,11 @@ function RoomExperience() {
   const isDesktop = useMediaQuery('(min-width: 720px)');
   const markCanvasReady = useCallback(() => setCanvasReady(true), []);
   const markDollWordsReady = useCallback(() => setDollWordsReady(true), []);
-  const revealRoom = useCallback(() => setRoomRevealed(true), []);
+  const revealRoom = useCallback(() => {
+    setRoomRevealed(true);
+    if (hasWebGL) setRoomDrawing(true);
+  }, [hasWebGL]);
+  const finishRoomDrawing = useCallback(() => setRoomDrawing(false), []);
   const markSceneReady = useCallback(() => setSceneReady(true), []);
   const activeCameraFocus = isDoorExitPromptOpen
     ? 'door'
@@ -96,6 +101,7 @@ function RoomExperience() {
     <main className="app-shell">
       <section
         className="room-stage"
+        data-drawing={roomDrawing ? 'true' : 'false'}
         data-revealed={roomRevealed ? 'true' : 'false'}
         data-settled={roomSettled ? 'true' : 'false'}
         onTransitionEnd={(event) => {
@@ -109,7 +115,9 @@ function RoomExperience() {
           <RoomCanvas
             onCanvasReady={markCanvasReady}
             onDollWordsReady={markDollWordsReady}
+            onRevealComplete={finishRoomDrawing}
             onSceneReady={markSceneReady}
+            revealActive={roomDrawing}
           />
         ) : (
           <RoomFallback />

@@ -4,6 +4,7 @@ import { useMemo, useRef } from 'react';
 import { AdditiveBlending, type ShaderMaterial } from 'three';
 
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
+import { roomRevealRuntime } from '@/scene/effects/line-reveal';
 import { LineBox } from '@/scene/primitives/line-shape';
 import { useRoomInteraction } from '@/scene/primitives/use-room-interaction';
 import { useRoomStore } from '@/stores/room-store';
@@ -21,6 +22,7 @@ const rainbowVertexShader = /* glsl */ `
 
 const rainbowFragmentShader = /* glsl */ `
   uniform float uTime;
+  uniform float uRevealProgress;
   varying vec2 vUv;
 
   vec3 hsv2rgb(vec3 color) {
@@ -56,6 +58,9 @@ const rainbowFragmentShader = /* glsl */ `
     if (border < 0.001) discard;
 
     float progress = perimeterProgress(vUv);
+    float frameProgress = clamp((uRevealProgress - 0.28) / 0.3, 0.0, 1.0);
+    if (progress > frameProgress) discard;
+    float revealFade = smoothstep(0.45, 0.7, uRevealProgress);
     float phase = progress - uTime * 0.09;
     float iridescence = sin((progress * 3.0 - uTime * 0.12) * 6.28318530718) * 0.045;
     float hue = fract(progress * 1.35 - uTime * 0.085 + iridescence);
@@ -66,7 +71,7 @@ const rainbowFragmentShader = /* glsl */ `
     float primaryGlint = pow(primaryWave, 42.0);
     float secondaryGlint = pow(secondaryWave, 64.0);
     float intensity = 2.7 + primaryGlint * 4.2 + secondaryGlint * 2.4;
-    float alpha = border * (0.72 + primaryGlint * 0.25 + secondaryGlint * 0.16);
+    float alpha = border * revealFade * (0.72 + primaryGlint * 0.25 + secondaryGlint * 0.16);
 
     gl_FragColor = vec4(rainbow * intensity, alpha);
   }
@@ -74,10 +79,20 @@ const rainbowFragmentShader = /* glsl */ `
 
 function RainbowFrameGlow({ reducedMotion }: { reducedMotion: boolean }) {
   const material = useRef<ShaderMaterial>(null);
-  const uniforms = useMemo(() => ({ uTime: { value: 0 } }), []);
+  const uniforms = useMemo(
+    () => ({
+      uRevealProgress: { value: roomRevealRuntime.progress.current },
+      uTime: { value: 0 },
+    }),
+    [],
+  );
 
   useFrame((state) => {
+    const revealUniform = material.current?.uniforms.uRevealProgress;
     const timeUniform = material.current?.uniforms.uTime;
+    if (revealUniform !== undefined) {
+      revealUniform.value = roomRevealRuntime.progress.current;
+    }
     if (timeUniform !== undefined) {
       timeUniform.value = reducedMotion ? 0 : state.clock.elapsedTime;
     }

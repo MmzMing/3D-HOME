@@ -37,6 +37,10 @@
   pointer-events: auto;
 }
 
+.room-stage[data-drawing='true'] {
+  pointer-events: none;
+}
+
 .room-stage[data-settled='true'] {
   will-change: auto;
 }

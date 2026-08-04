@@ -1,4 +1,4 @@
-import { Edges, Outlines, RoundedBox } from '@react-three/drei';
+import { Edges, RoundedBox } from '@react-three/drei';
 import type { ThreeElements } from '@react-three/fiber';
 import type { PropsWithChildren } from 'react';
 import type { Vector2 } from 'three';
@@ -55,27 +55,6 @@ function MaterialAndEdges({
   );
 }
 
-function RoundedMaterialAndOutline({
-  accent,
-  glow,
-  hovered,
-}: Pick<ShapeProps, 'accent' | 'glow' | 'hovered'>) {
-  const colors = useColors(accent, hovered);
-  return (
-    <>
-      <meshBasicMaterial
-        color={colors.fill}
-        polygonOffset
-        polygonOffsetFactor={2}
-        polygonOffsetUnits={2}
-        toneMapped={false}
-      />
-      <Outlines color={colors.line} thickness={hovered ? 0.18 : 0.12} toneMapped={false} />
-      {glow === undefined ? null : <GlowOutline {...glow} />}
-    </>
-  );
-}
-
 export function LineBox({
   accent,
   args,
@@ -101,7 +80,7 @@ export function LineRoundedBox({
 }: ShapeProps & { args: [number, number, number]; radius?: number }) {
   return (
     <RoundedBox args={args} radius={radius} smoothness={4} {...props}>
-      <RoundedMaterialAndOutline accent={accent} glow={glow} hovered={hovered} />
+      <MaterialAndEdges accent={accent} glow={glow} hovered={hovered} threshold={12} />
     </RoundedBox>
   );
 }

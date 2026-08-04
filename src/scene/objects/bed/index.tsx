@@ -5,13 +5,7 @@ import { MathUtils, type Group } from 'three';
 
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { FeatheredGlow, type GlowOutlineProps } from '@/scene/effects/glow-effects';
-import {
-  InteractionProxy,
-  LineBox,
-  LineCylinder,
-  LineRoundedBox,
-  LineSphere,
-} from '@/scene/primitives/line-shape';
+import { InteractionProxy, LineBox } from '@/scene/primitives/line-shape';
 import { useRoomInteraction } from '@/scene/primitives/use-room-interaction';
 import { useRoomStore } from '@/stores/room-store';
 
@@ -23,23 +17,13 @@ const warmGlow: GlowOutlineProps = {
   scale: 1.014,
 };
 
-const quiltBaseY = 1.37;
+const headboardSlats = [-1.8, -1.2, -0.6, 0, 0.6, 1.2, 1.8];
+const tableLegs = [-0.34, 0.34] as const;
+const quiltBaseY = 1.56;
 const quiltCenterZ = 0.72;
 const quiltPanelLength = 1.26;
 const quiltPanelWidth = 2.15;
 const quiltThickness = 0.11;
-
-const lampRibs = Array.from({ length: 6 }, (_, index) => {
-  const angle = (index / 6) * Math.PI * 2;
-  return {
-    bottom: [Math.cos(angle) * 0.39, 1.57, Math.sin(angle) * 0.39 - 0.02] as [
-      number,
-      number,
-      number,
-    ],
-    top: [Math.cos(angle) * 0.22, 1.99, Math.sin(angle) * 0.22 - 0.02] as [number, number, number],
-  };
-});
 
 type LampInteraction = ReturnType<typeof useRoomInteraction>;
 
@@ -51,6 +35,7 @@ function BedsideLamp({ interaction, on }: { interaction: LampInteraction; on: bo
   const lampGlow = theme === 'dark' && on ? warmGlow : undefined;
   const lightOpacity = theme === 'dark' ? 0.14 : 0.055;
   const surfaceOpacity = theme === 'dark' ? 0.07 : 0.022;
+  const lineColor = on ? '#fbbf24' : theme === 'light' ? '#000000' : '#f3f4f6';
 
   useFrame((state, delta) => {
     const group = glowGroup.current;
@@ -60,10 +45,9 @@ function BedsideLamp({ interaction, on }: { interaction: LampInteraction; on: bo
       on && !reducedMotion
         ? 1 + Math.sin((state.clock.elapsedTime / 5.2) * Math.PI * 2) * 0.045
         : 1;
-    const smoothing = Math.min(1, delta * 8);
-    group.scale.x += (pulse - group.scale.x) * smoothing;
-    group.scale.y += (pulse - group.scale.y) * smoothing;
-    group.scale.z += (pulse - group.scale.z) * smoothing;
+    group.scale.x = MathUtils.damp(group.scale.x, pulse, 8, delta);
+    group.scale.y = MathUtils.damp(group.scale.y, pulse, 8, delta);
+    group.scale.z = MathUtils.damp(group.scale.z, pulse, 8, delta);
 
     if (
       (on && !reducedMotion) ||
@@ -78,22 +62,15 @@ function BedsideLamp({ interaction, on }: { interaction: LampInteraction; on: bo
   return (
     <group {...interaction.bind}>
       <group ref={glowGroup}>
-        <LineSphere
-          accent={on ? 'warm' : undefined}
-          args={[0.14, 16, 10]}
-          glow={lampGlow}
-          hovered={interaction.hovered}
-          position={[0, 1.69, -0.02]}
-        />
         <FeatheredGlow
           active={on}
           color="#fbbf24"
           geometry="cone"
           intensity={1.28}
           opacity={lightOpacity}
-          position={[0, 1.3, 0.06]}
+          position={[0, 1.82, 0.08]}
           reducedMotion={reducedMotion}
-          scale={[0.36, 0.255, 0.36]}
+          scale={[0.42, 0.3, 0.42]}
         />
         <FeatheredGlow
           active={on}
@@ -101,73 +78,52 @@ function BedsideLamp({ interaction, on }: { interaction: LampInteraction; on: bo
           geometry="plane"
           intensity={1.05}
           opacity={surfaceOpacity}
-          position={[0, 1.005, 0.08]}
+          position={[0, 1.38, 0.08]}
           reducedMotion={reducedMotion}
           rotation={[-Math.PI / 2, 0, 0]}
-          scale={[0.58, 0.46, 1]}
+          scale={[0.62, 0.5, 1]}
         />
       </group>
 
-      <LineCylinder
-        args={[0.27, 0.27, 0.08, 20]}
-        glow={lampGlow}
-        hovered={interaction.hovered}
-        position={[0, 1.04, -0.02]}
-      />
-      <LineCylinder
+      <LineBox
         accent={on ? 'warm' : undefined}
-        args={[0.18, 0.22, 0.06, 20]}
+        args={[0.56, 0.1, 0.38]}
         glow={lampGlow}
         hovered={interaction.hovered}
-        position={[0, 1.12, -0.02]}
+        position={[0, 1.4, 0]}
       />
-      <LineCylinder
+      <LineBox
         accent={on ? 'warm' : undefined}
-        args={[0.055, 0.055, 0.54, 12]}
+        args={[0.12, 0.58, 0.12]}
         glow={lampGlow}
-        hovered={interaction.hovered}
-        position={[0, 1.4, -0.02]}
+        position={[0, 1.72, 0]}
       />
-      <LineCylinder
+      <LineBox
         accent={on ? 'warm' : undefined}
-        args={[0.1, 0.1, 0.045, 16]}
+        args={[0.24, 0.08, 0.2]}
         glow={lampGlow}
-        hovered={interaction.hovered}
-        position={[0, 1.64, -0.02]}
+        position={[0, 2.03, 0]}
+      />
+      <Line
+        color={lineColor}
+        lineWidth={on ? 1.15 : 0.9}
+        points={[
+          [-0.42, 2.04, 0],
+          [-0.28, 2.4, 0],
+          [0.28, 2.4, 0],
+          [0.42, 2.04, 0],
+          [-0.42, 2.04, 0],
+        ]}
+        toneMapped={false}
+      />
+      <LineBox
+        accent={on ? 'warm' : undefined}
+        args={[0.5, 0.07, 0.22]}
+        glow={lampGlow}
+        position={[0, 2.4, 0]}
       />
 
-      <LineCylinder
-        accent={on ? 'warm' : undefined}
-        args={[0.4, 0.4, 0.045, 24]}
-        glow={lampGlow}
-        hovered={interaction.hovered}
-        position={[0, 1.57, -0.02]}
-      />
-      <LineCylinder
-        accent={on ? 'warm' : undefined}
-        args={[0.22, 0.22, 0.045, 24]}
-        glow={lampGlow}
-        hovered={interaction.hovered}
-        position={[0, 2, -0.02]}
-      />
-      <LineCylinder
-        accent={on ? 'warm' : undefined}
-        args={[0.22, 0.4, 0.42, 24]}
-        glow={lampGlow}
-        hovered={interaction.hovered}
-        position={[0, 1.785, -0.02]}
-      />
-      {lampRibs.map((rib, index) => (
-        <Line
-          key={`lamp-rib-${String(index)}`}
-          color={on ? '#fbbf24' : theme === 'light' ? '#000000' : '#f3f4f6'}
-          lineWidth={on ? 1.15 : 0.85}
-          points={[rib.bottom, rib.top]}
-          toneMapped={false}
-        />
-      ))}
-
-      <InteractionProxy args={[0.98, 1.28, 0.98]} position={[0, 1.56, -0.02]} />
+      <InteractionProxy args={[0.9, 1.25, 0.76]} position={[0, 1.9, 0]} />
     </group>
   );
 }
@@ -182,20 +138,18 @@ function BedsideCabinet({
   side: -1 | 1;
 }) {
   return (
-    <group position={[side * 2.96, 0, -2.34]}>
-      <LineRoundedBox args={[0.82, 0.68, 0.94]} position={[0, 0.64, 0]} radius={0.08} />
-      <LineRoundedBox args={[0.7, 0.28, 0.055]} position={[0, 0.73, 0.49]} radius={0.025} />
-      <LineCylinder
-        args={[0.045, 0.045, 0.08, 12]}
-        position={[0, 0.73, 0.56]}
-        rotation={[Math.PI / 2, 0, 0]}
-      />
-      {[-0.28, 0.28].flatMap((x) =>
-        [-0.31, 0.31].map((z) => (
+    <group position={[side * 3.02, 0, -2.3]}>
+      <LineBox args={[0.92, 0.78, 0.84]} position={[0, 0.78, 0]} />
+      <LineBox args={[1.04, 0.14, 0.96]} position={[0, 1.24, 0]} />
+      <LineBox args={[0.72, 0.24, 0.05]} position={[0, 0.92, 0.44]} />
+      <LineBox args={[0.17, 0.04, 0.05]} position={[0, 0.92, 0.48]} />
+      <LineBox args={[0.72, 0.24, 0.05]} position={[0, 0.57, 0.44]} />
+      {tableLegs.flatMap((x) =>
+        tableLegs.map((z) => (
           <LineBox
             key={`${String(x)}-${String(z)}`}
-            args={[0.07, 0.22, 0.07]}
-            position={[x, 0.2, z]}
+            args={[0.14, 0.52, 0.14]}
+            position={[x, 0.26, z]}
           />
         )),
       )}
@@ -204,45 +158,16 @@ function BedsideCabinet({
   );
 }
 
-function UpholsteredHeadboard() {
+function WoodenHeadboard() {
   return (
     <group>
-      <LineRoundedBox args={[4.92, 2.34, 0.38]} position={[0, 1.62, -2.93]} radius={0.18} />
-      <LineRoundedBox args={[4.55, 1.8, 0.16]} position={[0, 1.67, -2.69]} radius={0.14} />
-      {[-1.5, -0.5, 0.5, 1.5].map((x) => (
-        <LineRoundedBox
-          key={x}
-          args={[0.055, 1.48, 0.045]}
-          position={[x, 1.68, -2.58]}
-          radius={0.02}
-        />
+      <LineBox args={[0.3, 3.72, 0.3]} position={[-2.26, 1.86, -2.66]} />
+      <LineBox args={[0.3, 3.72, 0.3]} position={[2.26, 1.86, -2.66]} />
+      <LineBox args={[4.86, 0.3, 0.3]} position={[0, 3.56, -2.66]} />
+      <LineBox args={[4.62, 0.2, 0.2]} position={[0, 1.32, -2.66]} />
+      {headboardSlats.map((x) => (
+        <LineBox key={x} args={[0.1, 2.18, 0.14]} position={[x, 2.42, -2.66]} />
       ))}
-      <LineRoundedBox args={[4.66, 0.1, 0.18]} position={[0, 2.79, -2.78]} radius={0.04} />
-    </group>
-  );
-}
-
-function PillowSet({ pillowRef }: { pillowRef: React.RefObject<Group | null> }) {
-  return (
-    <group ref={pillowRef} position={[0, 0, 0]}>
-      <LineRoundedBox
-        args={[1.75, 0.32, 0.98]}
-        position={[-1.03, 1.48, -1.76]}
-        radius={0.18}
-        rotation={[0.025, -0.08, 0.02]}
-      />
-      <LineRoundedBox
-        args={[1.75, 0.32, 0.98]}
-        position={[1.03, 1.48, -1.76]}
-        radius={0.18}
-        rotation={[0.025, 0.08, -0.02]}
-      />
-      <LineRoundedBox
-        args={[1.18, 0.38, 0.72]}
-        position={[0, 1.62, -1.37]}
-        radius={0.16}
-        rotation={[0.02, 0, 0]}
-      />
     </group>
   );
 }
@@ -286,6 +211,17 @@ function QuiltColumn({
   );
 }
 
+function Pillows({ pillowRef }: { pillowRef: React.RefObject<Group | null> }) {
+  return (
+    <group ref={pillowRef} position={[0, 0, 0]}>
+      <LineBox args={[1.68, 0.22, 0.86]} position={[-1.02, 1.62, -1.9]} />
+      <LineBox args={[1.68, 0.22, 0.86]} position={[1.02, 1.62, -1.9]} />
+      <LineBox args={[0.14, 0.04, 0.7]} position={[-0.18, 1.75, -1.9]} />
+      <LineBox args={[0.14, 0.04, 0.7]} position={[0.18, 1.75, -1.9]} />
+    </group>
+  );
+}
+
 export function Bed() {
   const foldProgress = useRef(0);
   const leftColumnFold = useRef<Group>(null);
@@ -325,7 +261,7 @@ export function Bed() {
 
     const target = folded ? 1 : 0;
     const previous = foldProgress.current;
-    const step = reducedMotion ? 1 : delta / 1.75;
+    const step = reducedMotion ? 1 : delta / 1.25;
     foldProgress.current =
       target > previous ? Math.min(target, previous + step) : Math.max(target, previous - step);
 
@@ -344,23 +280,32 @@ export function Bed() {
     leftColumn.position.y = quiltBaseY + quiltThickness + quiltThickness * 3 * thirdStage;
     leftColumn.rotation.z = -Math.PI * thirdStage;
 
-    const pillowLift = Math.sin(progress * Math.PI) * 0.035;
-    pillowGroup.position.y = pillowLift;
+    pillowGroup.position.y = Math.sin(progress * Math.PI) * 0.035;
     pillowGroup.position.z = -progress * 0.035;
 
-    const moving = Math.abs(target - foldProgress.current) > 0.001;
-    if (moving) invalidate();
+    if (Math.abs(target - progress) > 0.001) invalidate();
   });
 
   return (
     <group position={[6.8, 0, 5.05]} rotation={[0, -Math.PI / 2, 0]}>
-      <UpholsteredHeadboard />
+      <WoodenHeadboard />
 
-      <LineRoundedBox args={[4.96, 0.34, 6.08]} position={[0, 0.5, 0]} radius={0.12} />
-      <LineRoundedBox args={[4.2, 0.3, 5.24]} position={[0, 0.2, 0.08]} radius={0.08} />
-      <LineRoundedBox args={[4.58, 0.5, 5.78]} position={[0, 0.9, 0.02]} radius={0.2} />
-      <LineRoundedBox args={[4.45, 0.13, 5.65]} position={[0, 1.22, 0.04]} radius={0.08} />
+      <LineBox args={[4.86, 0.38, 5.62]} position={[0, 0.72, 0]} />
+      <LineBox args={[4.72, 0.44, 0.22]} position={[0, 0.82, -2.7]} />
+      <LineBox args={[4.72, 0.44, 0.22]} position={[0, 0.82, 2.7]} />
+      <LineBox args={[0.22, 0.44, 5.18]} position={[-2.3, 0.82, 0]} />
+      <LineBox args={[0.22, 0.44, 5.18]} position={[2.3, 0.82, 0]} />
 
+      <LineBox args={[4.48, 0.16, 5.26]} position={[0, 1.02, 0.06]} />
+      <LineBox args={[4.3, 0.36, 5.02]} position={[0, 1.3, 0.08]} />
+      <LineBox args={[4.12, 0.08, 4.84]} position={[0, 1.51, 0.1]} />
+
+      <LineBox args={[0.32, 0.72, 0.32]} position={[-2.2, 0.36, -2.5]} />
+      <LineBox args={[0.32, 0.72, 0.32]} position={[2.2, 0.36, -2.5]} />
+      <LineBox args={[0.32, 0.72, 0.32]} position={[-2.2, 0.36, 2.5]} />
+      <LineBox args={[0.32, 0.72, 0.32]} position={[2.2, 0.36, 2.5]} />
+
+      <Pillows pillowRef={pillows} />
       <group
         ref={leftColumnFold}
         position={[0, quiltBaseY + quiltThickness, 0]}
@@ -380,12 +325,11 @@ export function Bed() {
         x={quiltPanelWidth / 2}
       />
 
-      <PillowSet pillowRef={pillows} />
       <BedsideCabinet lampInteraction={lampInteraction} lampOn={bedsideLampOn} side={-1} />
       <BedsideCabinet lampInteraction={lampInteraction} lampOn={bedsideLampOn} side={1} />
 
       <group {...interaction.bind}>
-        <InteractionProxy args={[4.7, 0.82, 4.45]} position={[0, 1.38, 0.62]} />
+        <InteractionProxy args={[4.8, 1.7, 5.2]} position={[0, 1.18, 0.18]} />
       </group>
     </group>
   );

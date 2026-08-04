@@ -11,6 +11,8 @@ import {
   type ShaderMaterial,
 } from 'three';
 
+import { getRoomRevealFade } from '@/scene/effects/line-reveal';
+
 type TransformProps = Pick<
   ThreeElements['mesh'],
   'position' | 'renderOrder' | 'rotation' | 'scale'
@@ -140,7 +142,7 @@ export function FeatheredGlow({
   ...transform
 }: FeatheredGlowProps) {
   const invalidate = useThree((state) => state.invalidate);
-  const currentOpacity = useRef(active ? opacity : 0);
+  const currentOpacity = useRef(active ? opacity * getRoomRevealFade() : 0);
   const material = useRef<ShaderMaterial>(null);
   const uniforms = useMemo(
     () => ({
@@ -149,7 +151,7 @@ export function FeatheredGlow({
       uMode: {
         value: geometry === 'cone' ? 2 : shape === 'moonbeam' ? 3 : shape === 'beam' ? 1 : 0,
       },
-      uOpacity: { value: active ? opacity : 0 },
+      uOpacity: { value: active ? opacity * getRoomRevealFade() : 0 },
       uPulse: { value: reducedMotion ? 0 : pulseAmplitude },
       uPulseSeconds: { value: pulseSeconds },
       uTime: { value: 0 },
@@ -168,7 +170,7 @@ export function FeatheredGlow({
   );
 
   useFrame((state, delta) => {
-    const target = active ? opacity : 0;
+    const target = active ? opacity * getRoomRevealFade() : 0;
     currentOpacity.current = MathUtils.damp(currentOpacity.current, target, 7, delta);
     const shader = material.current;
     if (shader !== null) {
