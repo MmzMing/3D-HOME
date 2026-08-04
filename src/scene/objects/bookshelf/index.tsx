@@ -98,7 +98,7 @@ export function Bookshelf() {
       <LineBox args={[0.17, 4.05, 1.04]} position={[1.64, 1.94, 0]} />
       <LineBox args={[0.12, 3.7, 0.1]} position={[0, 1.94, -0.49]} />
       {hoveredFeedName === null ? null : (
-        <group position={[0, 4.42, 0.68]}>
+        <group position={[-0.2, 4.42, 0.68]}>
           <LineBox args={[3.05, 0.62, 0.08]} accent="active" />
           <Text
             position={[0, 0, 0.05]}

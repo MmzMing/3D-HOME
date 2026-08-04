@@ -17,6 +17,7 @@
   max-height: min(760px, calc(100dvh - 40px));
   flex-direction: column;
   overflow: hidden;
+  border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface-solid);
   box-shadow: var(--shadow);
@@ -39,7 +40,7 @@
   max-height: min(820px, calc(100dvh - 32px));
   flex-direction: column;
   overflow: hidden;
-  border: 0;
+  border: 1px solid var(--border);
   border-radius: 8px;
   background: color-mix(in srgb, var(--surface-solid) 96%, transparent);
   box-shadow: var(--shadow);
@@ -88,7 +89,7 @@
   max-height: min(820px, calc(100dvh - 32px));
   flex-direction: column;
   overflow: hidden;
-  border: 0;
+  border: 1px solid var(--border);
   border-radius: 8px;
   background: color-mix(in srgb, var(--surface-solid) 96%, transparent);
   box-shadow: var(--shadow);

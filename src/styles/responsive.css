@@ -173,7 +173,7 @@
   }
 
   .floating-playlist-tracks {
-    max-height: min(44dvh, calc(100dvh - 224px));
+    max-height: min(44dvh, calc(100dvh - 260px));
   }
 
   .dialog-content,
