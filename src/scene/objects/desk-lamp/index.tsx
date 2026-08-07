@@ -1,7 +1,7 @@
 import { Line, Text, useCursor } from '@react-three/drei';
 import { useState } from 'react';
 
-import { siteRecordsConfig } from '@/config';
+import { sceneFont, siteRecordsConfig } from '@/config';
 import { InteractionProxy, LineBox, LineCylinder } from '@/scene/primitives/line-shape';
 import { useRoomInteraction } from '@/scene/primitives/use-room-interaction';
 import { useRoomStore } from '@/stores/room-store';
@@ -62,7 +62,7 @@ export function DeskLamp() {
           anchorX="center"
           anchorY="middle"
           color={icpHovered ? '#0e7490' : color}
-          font="/assets/fonts/ark-pixel-12px-proportional-zh-cn.woff"
+          font={sceneFont}
           fontSize={0.17}
           position={[0, 0, 0.04]}
           onClick={(event) => {

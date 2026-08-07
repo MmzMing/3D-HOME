@@ -4,7 +4,7 @@ import { CuboidCollider, Physics, RigidBody, type RapierRigidBody } from '@react
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Euler, MathUtils, Quaternion, Vector3, type Group } from 'three';
 
-import { profileConfig } from '@/config';
+import { profileConfig, sceneFont } from '@/config';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import {
   advanceTimelineGlyph,
@@ -46,6 +46,10 @@ const sdfGlyphSize = 64;
 const preloadCharacters = Array.from(
   new Set(profileConfig.intro.audioPhrases.flatMap(({ phrase }) => segmentGraphemes(phrase))),
 ).join('');
+const configuredDollFonts = profileConfig.intro.dollFonts;
+const primaryDollFont =
+  configuredDollFonts.find((font) => font.src === sceneFont) ?? configuredDollFonts[0];
+const mobileDollFonts = primaryDollFont === undefined ? configuredDollFonts : [primaryDollFont];
 
 const spawnBounds: Record<
   CameraZone,
@@ -95,10 +99,13 @@ function WarmupReady({ onReady }: { onReady: () => void }) {
 }
 
 function FontWarmup({ onReady }: { onReady: () => void }) {
+  const { size } = useThree();
+  const fonts = size.width < 720 ? mobileDollFonts : configuredDollFonts;
+
   return (
     <>
       <group visible={false}>
-        {profileConfig.intro.dollFonts.map((font) => (
+        {fonts.map((font) => (
           <Text
             key={font.src}
             characters={preloadCharacters}
@@ -281,7 +288,7 @@ function DollWordBodies() {
     if (burst === null || burst.id === lastBurstId.current) return;
     lastBurstId.current = burst.id;
     const now = performance.now();
-    const fonts = profileConfig.intro.dollFonts;
+    const fonts = mobile ? mobileDollFonts : configuredDollFonts;
     const plan = createBurstPlan(burst.id, burst.phrase, {
       anchorCount: 1,
       fontCount: fonts.length,

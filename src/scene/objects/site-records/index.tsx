@@ -1,10 +1,8 @@
 import { Image, Text, useCursor } from '@react-three/drei';
 import { useState } from 'react';
 
-import { siteRecordsConfig } from '@/config';
+import { sceneFont, siteRecordsConfig } from '@/config';
 import { useRoomStore } from '@/stores/room-store';
-
-const pixelFont = '/assets/fonts/ark-pixel-12px-proportional-zh-cn.woff';
 
 interface RecordLinkProps {
   icon?: string;
@@ -47,7 +45,7 @@ function RecordLink({ icon, label, position, url }: RecordLinkProps) {
         anchorX="left"
         anchorY="middle"
         color={hovered ? '#0e7490' : color}
-        font={pixelFont}
+        font={sceneFont}
         fontSize={0.24}
         position={[icon === undefined ? 0 : 0.27, 0, 0]}
       >

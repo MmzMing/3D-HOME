@@ -3,7 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useRef } from 'react';
 import type { Group } from 'three';
 
-import { siteRecordsConfig } from '@/config';
+import { sceneFont, siteRecordsConfig } from '@/config';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { FeatheredGlow } from '@/scene/effects/glow-effects';
 import { InteractionProxy, LineBox, LinePlane, LineSphere } from '@/scene/primitives/line-shape';
@@ -45,6 +45,7 @@ export function Door() {
         anchorX="center"
         anchorY="middle"
         color={theme === 'light' ? '#000000' : '#f3f4f6'}
+        font={sceneFont}
         fontSize={0.22}
         position={[1.14, 4.98, 0.15]}
       >

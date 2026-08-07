@@ -11,6 +11,8 @@ import siteRecordsData from './site-records.json';
 import themeData from './theme.json';
 import weatherData from './weather.json';
 
+export { sceneFont } from './fonts';
+
 const httpsUrl = z.url().refine((value) => new URL(value).protocol === 'https:');
 const localAsset = z.string().regex(/^\/assets\//);
 

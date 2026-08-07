@@ -3,7 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import { MathUtils, type Group } from 'three';
 
-import { linksConfig, type LinkConfig } from '@/config';
+import { linksConfig, sceneFont, type LinkConfig } from '@/config';
 import { InteractionProxy, LineBox } from '@/scene/primitives/line-shape';
 import { useRoomInteraction } from '@/scene/primitives/use-room-interaction';
 import { useRoomStore } from '@/stores/room-store';
@@ -68,6 +68,7 @@ function LinkBubble({ index, link, open }: { index: number; link: LinkConfig; op
         <meshBasicMaterial map={texture} />
       </mesh>
       <Text
+        font={sceneFont}
         position={[-0.12, 0.14, 0.07]}
         fontSize={0.16}
         maxWidth={0.75}
@@ -86,6 +87,7 @@ function LinkBubble({ index, link, open }: { index: number; link: LinkConfig; op
         {link.title}
       </Text>
       <Text
+        font={sceneFont}
         position={[-0.12, -0.19, 0.07]}
         fontSize={0.09}
         maxWidth={0.76}

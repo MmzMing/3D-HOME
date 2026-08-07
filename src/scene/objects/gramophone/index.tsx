@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useRef } from 'react';
 import type { Group } from 'three';
 
+import { sceneFont } from '@/config';
 import { InteractionProxy, LineBox, LineCylinder } from '@/scene/primitives/line-shape';
 import { useRoomInteraction } from '@/scene/primitives/use-room-interaction';
 import { usePlayerStore } from '@/stores/player-store';
@@ -98,13 +99,13 @@ export function Gramophone() {
         lineWidth={1.1}
       />
       <group ref={notes} visible={playing} position={[0.84, 2.88, -0.08]}>
-        <Text position={[-0.24, 0, 0]} fontSize={0.5} color={noteColor}>
+        <Text position={[-0.24, 0, 0]} font={sceneFont} fontSize={0.5} color={noteColor}>
           ♪
         </Text>
-        <Text position={[0.3, 0.5, 0.04]} fontSize={0.42} color={noteColor}>
+        <Text position={[0.3, 0.5, 0.04]} font={sceneFont} fontSize={0.42} color={noteColor}>
           ♫
         </Text>
-        <Text position={[-0.05, 1, 0.02]} fontSize={0.36} color={noteColor}>
+        <Text position={[-0.05, 1, 0.02]} font={sceneFont} fontSize={0.36} color={noteColor}>
           ♪
         </Text>
       </group>

@@ -3,7 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import { MathUtils, type Group } from 'three';
 
-import { feedsConfig, type FeedConfig } from '@/config';
+import { feedsConfig, sceneFont, type FeedConfig } from '@/config';
 import { LineBox } from '@/scene/primitives/line-shape';
 import { useRoomStore } from '@/stores/room-store';
 import { playRoomSound } from '@/utils/room-audio';
@@ -101,6 +101,7 @@ export function Bookshelf() {
         <group position={[-0.2, 4.42, 0.68]}>
           <LineBox args={[3.05, 0.62, 0.08]} accent="active" />
           <Text
+            font={sceneFont}
             position={[0, 0, 0.05]}
             fontSize={0.23}
             color={theme === 'light' ? '#0e7490' : '#67e8f9'}
