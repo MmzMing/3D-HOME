@@ -120,7 +120,7 @@
 
 .profile-skill-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   padding: 0;
   margin: 0;
@@ -164,6 +164,53 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.profile-skill-level {
+  margin-left: auto;
+  flex: 0 0 auto;
+  padding: 2px 0 2px 8px;
+  color: var(--profile-level-color);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.profile-skill-level[data-level='xhigh'] {
+  text-shadow:
+    0 0 6px color-mix(in srgb, var(--profile-level-color) 70%, transparent),
+    0 0 14px color-mix(in srgb, var(--profile-level-color) 45%, transparent);
+  animation: profile-level-glow 1.6s ease-in-out infinite alternate;
+}
+
+.profile-skill-level[data-level='max'] {
+  color: transparent;
+  background: linear-gradient(90deg, #f43f5e, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6, #f43f5e)
+    0 0 / 200% 100%;
+  background-clip: text;
+  animation: profile-level-rainbow 3s linear infinite;
+  filter: drop-shadow(0 0 5px rgb(167 139 250 / 50%));
+}
+
+@keyframes profile-level-glow {
+  from {
+    text-shadow:
+      0 0 4px color-mix(in srgb, var(--profile-level-color) 55%, transparent),
+      0 0 10px color-mix(in srgb, var(--profile-level-color) 30%, transparent);
+  }
+
+  to {
+    text-shadow:
+      0 0 8px color-mix(in srgb, var(--profile-level-color) 85%, transparent),
+      0 0 18px color-mix(in srgb, var(--profile-level-color) 55%, transparent);
+  }
+}
+
+@keyframes profile-level-rainbow {
+  to {
+    background-position: 200% 0;
+  }
 }
 
 .github-summary {

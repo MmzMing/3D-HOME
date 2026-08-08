@@ -8,10 +8,21 @@ import type { ProfileConfig } from '@/config';
 
 import { resolveSkillIcon } from './skill-icons';
 
+type SkillLevel = ProfileConfig['skills'][number]['items'][number]['level'];
+
 const socialIcons: Record<string, IconType> = {
   Bilibili: FaBilibili,
   GitHub: FaGithub,
   QQ群: FaQq,
+};
+
+const skillLevels: Record<SkillLevel, { color: string; label: string }> = {
+  low: { color: '#eab308', label: 'Low' },
+  medium: { color: '#22c55e', label: 'Medium' },
+  high: { color: '#b1b9f9', label: 'High' },
+  xhigh: { color: '#af87ff', label: 'X-High' },
+  max: { color: '#a855f7', label: 'Max' },
+  ultra: { color: '#ec4899', label: 'Ultra' },
 };
 
 export function ProfileCard({ profile }: { profile: ProfileConfig }) {
@@ -65,6 +76,7 @@ export function ProfileCard({ profile }: { profile: ProfileConfig }) {
               <ul className="profile-skill-grid" aria-label={group.label}>
                 {group.items.map((skill) => {
                   const Icon = resolveSkillIcon(skill.icon);
+                  const level = skillLevels[skill.level];
                   const style =
                     skill.color === undefined
                       ? undefined
@@ -76,6 +88,13 @@ export function ProfileCard({ profile }: { profile: ProfileConfig }) {
                         {Icon === undefined ? <Code2 size={19} /> : <Icon size={19} />}
                       </span>
                       <span className="profile-skill-name">{skill.name}</span>
+                      <span
+                        className="profile-skill-level"
+                        data-level={skill.level}
+                        style={{ '--profile-level-color': level.color } as CSSProperties}
+                      >
+                        {level.label}
+                      </span>
                     </li>
                   );
                 })}

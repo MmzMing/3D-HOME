@@ -67,6 +67,7 @@ const profileSchema = z.object({
         z.object({
           color: z.string().optional(),
           icon: z.string().min(1),
+          level: z.enum(['low', 'medium', 'high', 'xhigh', 'max', 'ultra']),
           name: z.string().min(1),
         }),
       ),
