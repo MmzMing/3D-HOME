@@ -61,7 +61,16 @@ const profileSchema = z.object({
   }),
   name: z.string().min(1),
   skills: z.array(
-    z.object({ color: z.string().optional(), icon: z.string().min(1), name: z.string().min(1) }),
+    z.object({
+      label: z.string().min(1),
+      items: z.array(
+        z.object({
+          color: z.string().optional(),
+          icon: z.string().min(1),
+          name: z.string().min(1),
+        }),
+      ),
+    }),
   ),
   socialLinks: z.array(
     z.object({ color: z.string().optional(), label: z.string(), url: httpsUrl }),

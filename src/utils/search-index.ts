@@ -35,7 +35,9 @@ const baseDocuments: IndexedDocument[] = [
     url: feed.siteUrl,
   })),
   {
-    content: `${profileConfig.bio} ${profileConfig.intro.role} ${profileConfig.skills.map((item) => item.name).join(' ')}`,
+    content: `${profileConfig.bio} ${profileConfig.intro.role} ${profileConfig.skills
+      .flatMap((group) => group.items.map((item) => item.name))
+      .join(' ')}`,
     id: 'profile:owner',
     kind: '个人资料',
     title: profileConfig.name,

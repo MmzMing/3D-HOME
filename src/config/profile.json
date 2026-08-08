@@ -49,26 +49,57 @@
   },
   "name": "MmzMing",
   "skills": [
-    { "color": "#437291", "icon": "java", "name": "Java" },
-    { "color": "#c71a36", "icon": "maven", "name": "Maven" },
-    { "color": "#d24939", "icon": "jenkins", "name": "Jenkins" },
-    { "color": "#6db33f", "icon": "spring", "name": "Spring" },
-    { "color": "#6db33f", "icon": "spring-cloud", "name": "Spring Cloud" },
-    { "color": "#4479a1", "icon": "mysql", "name": "MySQL" },
-    { "color": "#f80000", "icon": "oracle", "name": "Oracle" },
-    { "color": "#47a248", "icon": "mongodb", "name": "MongoDB" },
-    { "color": "#ff4438", "icon": "redis", "name": "Redis" },
-    { "color": "#005571", "icon": "elasticsearch", "name": "Elasticsearch" },
-    { "color": "#d22128", "icon": "rocketmq", "name": "RocketMQ" },
-    { "color": "#2496ed", "icon": "docker", "name": "Docker" },
-    { "color": "#f7df1e", "icon": "javascript", "name": "JavaScript" },
-    { "color": "#3178c6", "icon": "typescript", "name": "TypeScript" },
-    { "color": "#61dafb", "icon": "react", "name": "React" },
-    { "color": "#4fc08d", "icon": "vue", "name": "Vue.js" },
-    { "color": "#5fa04e", "icon": "node", "name": "Node.js" },
-    { "color": "#e34f26", "icon": "html", "name": "HTML5" },
-    { "color": "#663399", "icon": "css", "name": "CSS" },
-    { "color": "#06b6d4", "icon": "tailwind", "name": "Tailwind CSS" }
+    {
+      "label": "编程语言",
+      "items": [
+        { "color": "#437291", "icon": "java", "name": "Java" },
+        { "color": "#3776ab", "icon": "python", "name": "Python" }
+      ]
+    },
+    {
+      "label": "框架与库",
+      "items": [
+        { "color": "#6db33f", "icon": "spring", "name": "Spring" },
+        { "color": "#6db33f", "icon": "spring-cloud", "name": "Spring Cloud" },
+        { "color": "#009688", "icon": "fastapi", "name": "FastAPI" },
+        { "color": "#d71f00", "icon": "sqlalchemy", "name": "SQLAlchemy" },
+        { "color": "#61dafb", "icon": "react", "name": "React" },
+        { "color": "#4fc08d", "icon": "vue", "name": "Vue.js" }
+      ]
+    },
+    {
+      "label": "数据库",
+      "items": [
+        { "color": "#4479a1", "icon": "mysql", "name": "MySQL" },
+        { "color": "#f80000", "icon": "oracle", "name": "Oracle" },
+        { "color": "#47a248", "icon": "mongodb", "name": "MongoDB" },
+        { "color": "#4169e1", "icon": "postgresql", "name": "PostgreSQL" }
+      ]
+    },
+    {
+      "label": "中间件",
+      "items": [
+        { "color": "#ff4438", "icon": "redis", "name": "Redis" },
+        { "color": "#005571", "icon": "elasticsearch", "name": "Elasticsearch" },
+        { "color": "#d22128", "icon": "rocketmq", "name": "RocketMQ" },
+        { "color": "#ff6600", "icon": "rabbitmq", "name": "RabbitMQ" },
+        { "color": "#231f20", "icon": "kafka", "name": "Kafka" },
+        { "color": "#ff6a00", "icon": "oss", "name": "阿里云 OSS" },
+        { "color": "#00a0e9", "icon": "xxl-job", "name": "XXL-Job" },
+        { "color": "#c72e49", "icon": "minio", "name": "MinIO" },
+        { "color": "#e6522c", "icon": "prometheus", "name": "Prometheus" },
+        { "color": "#f46800", "icon": "grafana", "name": "Grafana" }
+      ]
+    },
+    {
+      "label": "开发工具",
+      "items": [
+        { "color": "#d24939", "icon": "jenkins", "name": "Jenkins" },
+        { "color": "#2496ed", "icon": "docker", "name": "Docker" },
+        { "color": "#326ce5", "icon": "kubernetes", "name": "Kubernetes" },
+        { "color": "#f80000", "icon": "plsql", "name": "PL/SQL Developer" }
+      ]
+    }
   ],
   "socialLinks": [
     {
