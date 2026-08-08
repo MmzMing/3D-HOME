@@ -77,13 +77,13 @@ export function ProfileCard({ profile }: { profile: ProfileConfig }) {
                 {group.items.map((skill) => {
                   const Icon = resolveSkillIcon(skill.icon);
                   const level = skillLevels[skill.level];
-                  const style =
-                    skill.color === undefined
-                      ? undefined
-                      : ({ '--profile-skill-color': skill.color } as CSSProperties);
+                  const style = {
+                    '--profile-skill-color': skill.color ?? undefined,
+                    '--profile-level-color': level.color,
+                  } as CSSProperties;
 
                   return (
-                    <li key={skill.name} style={style}>
+                    <li data-level={skill.level} key={skill.name} style={style}>
                       <span className="profile-skill-icon" aria-hidden="true">
                         {Icon === undefined ? <Code2 size={19} /> : <Icon size={19} />}
                       </span>

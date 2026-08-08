@@ -1,4 +1,5 @@
 import type { IconType } from 'react-icons';
+import { Sparkles } from 'lucide-react';
 import { FaClock, FaDatabase, FaJava, FaRocket } from 'react-icons/fa6';
 import {
   SiAlibabacloud,
@@ -23,7 +24,7 @@ import {
   SiVuedotjs,
 } from 'react-icons/si';
 
-const skillIcons: Record<string, IconType> = {
+const skillIcons: Record<string, IconType | typeof Sparkles> = {
   docker: SiDocker,
   elasticsearch: SiElasticsearch,
   fastapi: SiFastapi,
@@ -48,6 +49,7 @@ const skillIcons: Record<string, IconType> = {
   spring: SiSpring,
   'spring-cloud': SiSpring,
   sqlalchemy: SiSqlalchemy,
+  'vibe-coding': Sparkles,
   vue: SiVuedotjs,
   'xxl-job': FaClock,
 };

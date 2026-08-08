@@ -134,9 +134,9 @@
   align-items: center;
   gap: 8px;
   padding: 7px 9px;
-  border: 1px solid color-mix(in srgb, var(--profile-skill-color, var(--active)) 32%, var(--border));
+  border: 1px solid color-mix(in srgb, var(--profile-level-color, var(--active)) 32%, var(--border));
   border-radius: 5px;
-  background: color-mix(in srgb, var(--profile-skill-color, var(--active)) 7%, transparent);
+  background: color-mix(in srgb, var(--profile-level-color, var(--active)) 7%, transparent);
   color: var(--ink);
   font-size: 13px;
   transition:
@@ -146,9 +146,23 @@
 }
 
 .profile-skill-grid li:hover {
-  border-color: var(--profile-skill-color, var(--active));
-  background: color-mix(in srgb, var(--profile-skill-color, var(--active)) 14%, transparent);
+  border-color: var(--profile-level-color, var(--active));
+  background: color-mix(in srgb, var(--profile-level-color, var(--active)) 14%, transparent);
   transform: translateY(-2px);
+}
+
+.profile-skill-grid li[data-level='xhigh'] {
+  animation: profile-level-glow 1.6s ease-in-out infinite alternate;
+}
+
+.profile-skill-grid li[data-level='max'] {
+  border-color: transparent;
+  background:
+    linear-gradient(90deg, #f43f5e, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6, #f43f5e) 0 0 / 200%
+      100% border-box,
+    linear-gradient(color-mix(in srgb, var(--surface-solid) 88%, transparent)) padding-box;
+  animation: profile-level-rainbow 3s linear infinite;
+  filter: drop-shadow(0 0 6px rgb(167 139 250 / 35%));
 }
 
 .profile-skill-icon {
@@ -177,33 +191,24 @@
   white-space: nowrap;
 }
 
-.profile-skill-level[data-level='xhigh'] {
-  text-shadow:
-    0 0 6px color-mix(in srgb, var(--profile-level-color) 70%, transparent),
-    0 0 14px color-mix(in srgb, var(--profile-level-color) 45%, transparent);
-  animation: profile-level-glow 1.6s ease-in-out infinite alternate;
-}
-
 .profile-skill-level[data-level='max'] {
   color: transparent;
-  background: linear-gradient(90deg, #f43f5e, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6, #f43f5e)
-    0 0 / 200% 100%;
+  background: linear-gradient(90deg, #f43f5e, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6);
   background-clip: text;
-  animation: profile-level-rainbow 3s linear infinite;
   filter: drop-shadow(0 0 5px rgb(167 139 250 / 50%));
 }
 
 @keyframes profile-level-glow {
   from {
-    text-shadow:
-      0 0 4px color-mix(in srgb, var(--profile-level-color) 55%, transparent),
-      0 0 10px color-mix(in srgb, var(--profile-level-color) 30%, transparent);
+    box-shadow:
+      0 0 4px color-mix(in srgb, var(--profile-level-color) 35%, transparent),
+      0 0 10px color-mix(in srgb, var(--profile-level-color) 20%, transparent);
   }
 
   to {
-    text-shadow:
-      0 0 8px color-mix(in srgb, var(--profile-level-color) 85%, transparent),
-      0 0 18px color-mix(in srgb, var(--profile-level-color) 55%, transparent);
+    box-shadow:
+      0 0 9px color-mix(in srgb, var(--profile-level-color) 60%, transparent),
+      0 0 20px color-mix(in srgb, var(--profile-level-color) 40%, transparent);
   }
 }
 
