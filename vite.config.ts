@@ -21,23 +21,42 @@ function readRequestBody(request: IncomingMessage) {
   });
 }
 
-function escapeHtml(value: string) {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
-}
-
 function siteSeo(): Plugin {
-  const replacements = {
+  const siteUrl = siteConfig.siteUrl.replace(/\/+$/, '');
+  const ogImage = `${siteUrl}${siteConfig.image}`;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': `${siteUrl}/#website`,
+        description: siteConfig.description,
+        inLanguage: 'zh-CN',
+        name: siteConfig.siteName,
+        publisher: { '@id': `${siteUrl}/#person` },
+        url: `${siteUrl}/`,
+      },
+      {
+        '@type': 'Person',
+        '@id': `${siteUrl}/#person`,
+        description: siteConfig.description,
+        name: siteConfig.author,
+        url: `${siteUrl}/`,
+      },
+    ],
+  };
+
+  const replacements: Record<string, string> = {
     __SITE_AUTHOR__: siteConfig.author,
     __SITE_DESCRIPTION__: siteConfig.description,
-    __SITE_IMAGE__: siteConfig.image,
+    __SITE_IMAGE_ALT__: siteConfig.imageAlt,
+    __SITE_JSONLD__: JSON.stringify(jsonLd).replaceAll('<', '\\u003c'),
     __SITE_NAME__: siteConfig.siteName,
+    __SITE_OG_IMAGE__: ogImage,
     __SITE_SOCIAL_DESCRIPTION__: siteConfig.socialDescription,
     __SITE_TITLE__: siteConfig.title,
+    __SITE_URL__: siteUrl,
   };
 
   return {
@@ -45,7 +64,7 @@ function siteSeo(): Plugin {
     transformIndexHtml(html) {
       let transformed = html;
       Object.entries(replacements).forEach(([token, value]) => {
-        transformed = transformed.replaceAll(token, escapeHtml(value));
+        transformed = transformed.replaceAll(token, value);
       });
       return transformed;
     },

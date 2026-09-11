@@ -2,7 +2,10 @@
   "author": "MmzMing",
   "description": "MmzMing 的个人主页：全干工程师、Java 与前端开发者，以及一个可交互的 3D 房间。",
   "image": "/assets/images/profile/home1.webp",
+  "imageAlt": "MmzMing 的可交互 3D 线稿房间主页预览",
+  "lastmod": "2026-09-12",
   "siteName": "MmzMing 的个人主页",
+  "siteUrl": "https://www.mmzhiku.xyz",
   "socialDescription": "探索 MmzMing 的可交互 3D 房间，了解个人项目、技术栈与常用链接。",
   "title": "MmzMing | 可交互 3D 个人主页"
 }

@@ -146,7 +146,10 @@ const siteSchema = z.object({
   author: z.string().min(1),
   description: z.string().min(1),
   image: localAsset,
+  imageAlt: z.string().min(1).default(''),
+  lastmod: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   siteName: z.string().min(1),
+  siteUrl: httpsUrl,
   socialDescription: z.string().min(1),
   title: z.string().min(1),
 });

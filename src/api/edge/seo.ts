@@ -1,3 +1,4 @@
+import siteConfig from '../../config/site.json' with { type: 'json' };
 import type { EdgeContext } from './shared.ts';
 
 function escapeXml(value: string) {
@@ -37,6 +38,7 @@ export function handleSitemapGet(context: EdgeContext) {
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
     '  <url>',
     `    <loc>${loc}</loc>`,
+    `    <lastmod>${siteConfig.lastmod}</lastmod>`,
     '  </url>',
     '</urlset>',
     '',
