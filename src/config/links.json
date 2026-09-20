@@ -27,12 +27,12 @@
     "ctaLabel": "查看统计"
   },
   {
-    "id": "resume-editor",
-    "title": "简历编辑器",
-    "image": "/assets/images/links/resume.webp",
-    "url": "https://resume.mmzhiku.xyz",
-    "description": "在线编辑与维护个人简历。",
-    "tags": ["简历", "编辑"],
-    "ctaLabel": "打开编辑器"
+    "id": "toolbox",
+    "title": "工具盒子",
+    "image": "/assets/images/links/tool.webp",
+    "url": "https://tool.mmzhiku.xyz",
+    "description": "收集了一些常用的工具。",
+    "tags": ["工具", "盒子"],
+    "ctaLabel": "打开工具盒子"
   }
 ]
