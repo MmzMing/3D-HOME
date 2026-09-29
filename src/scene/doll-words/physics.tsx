@@ -46,10 +46,6 @@ const sdfGlyphSize = 64;
 const preloadCharacters = Array.from(
   new Set(profileConfig.intro.audioPhrases.flatMap(({ phrase }) => segmentGraphemes(phrase))),
 ).join('');
-const configuredDollFonts = profileConfig.intro.dollFonts;
-const primaryDollFont =
-  configuredDollFonts.find((font) => font.src === sceneFont) ?? configuredDollFonts[0];
-const mobileDollFonts = primaryDollFont === undefined ? configuredDollFonts : [primaryDollFont];
 
 const spawnBounds: Record<
   CameraZone,
@@ -99,23 +95,17 @@ function WarmupReady({ onReady }: { onReady: () => void }) {
 }
 
 function FontWarmup({ onReady }: { onReady: () => void }) {
-  const { size } = useThree();
-  const fonts = size.width < 720 ? mobileDollFonts : configuredDollFonts;
-
   return (
     <>
       <group visible={false}>
-        {fonts.map((font) => (
-          <Text
-            key={font.src}
-            characters={preloadCharacters}
-            font={font.src}
-            fontSize={0.1}
-            sdfGlyphSize={sdfGlyphSize}
-          >
-            {preloadCharacters}
-          </Text>
-        ))}
+        <Text
+          characters={preloadCharacters}
+          font={sceneFont}
+          fontSize={0.1}
+          sdfGlyphSize={sdfGlyphSize}
+        >
+          {preloadCharacters}
+        </Text>
       </group>
       <WarmupReady onReady={onReady} />
     </>
@@ -288,10 +278,9 @@ function DollWordBodies() {
     if (burst === null || burst.id === lastBurstId.current) return;
     lastBurstId.current = burst.id;
     const now = performance.now();
-    const fonts = mobile ? mobileDollFonts : configuredDollFonts;
     const plan = createBurstPlan(burst.id, burst.phrase, {
       anchorCount: 1,
-      fontCount: fonts.length,
+      fontCount: 1,
       mobile,
       reducedMotion,
     });
@@ -301,8 +290,6 @@ function DollWordBodies() {
     const phraseQuaternion = cameraQuaternion
       .clone()
       .multiply(new Quaternion().setFromEuler(new Euler(...plan.tilt)));
-    const font = fonts[plan.fontIndex] ?? fonts[0];
-    if (font === undefined) return;
 
     const additions = plan.glyphs
       .filter((glyph) => !glyph.isWhitespace)
@@ -316,7 +303,7 @@ function DollWordBodies() {
           createdAt: now + index * 0.001,
           expiresAt: reducedMotion ? now + reducedVisibleMs : null,
           fontSize: plan.fontSize,
-          fontSource: font.src,
+          fontSource: sceneFont,
           hadPhysics: false,
           height: glyph.height,
           id: `${String(burst.id)}-${String(glyph.sourceIndex)}`,

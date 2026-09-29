@@ -18,31 +18,19 @@
       { "phrase": "菲比ヾ(•ω•`)o", "track": "/assets/audio/profile/phoebe_1.mp3" },
       { "phrase": "菲~比~~", "track": "/assets/audio/profile/phoebe_2.mp3" },
       {
-        "phrase": "菲比啾比Ciallo～(∠・ω< )⌒★",
+        "phrase": "菲比啾比Ciallo～(/・ω< )⌒★",
         "track": "/assets/audio/profile/phoebe_chubby_0.mp3"
       },
       { "phrase": "菲比啾比(。・ω・。)", "track": "/assets/audio/profile/phoebe_chubby_1.mp3" },
       { "phrase": "菲比啾比－O－", "track": "/assets/audio/profile/phoebe_chubby_2.mp3" },
       {
-        "phrase": "菲比啾比Ciallo～(∠・ω< )⌒★",
+        "phrase": "菲比啾比Ciallo～(/・ω< )⌒★",
         "track": "/assets/audio/profile/phoebe_chubby_3.mp3"
       },
       { "phrase": "菲比啾比~~", "track": "/assets/audio/profile/phoebe_chubby_4.mp3" },
       { "phrase": "菲比啾比(*^_^*)", "track": "/assets/audio/profile/phoebe_chubby_5.mp3" },
-      { "phrase": "菲比啾比(╹ڡ╹ )", "track": "/assets/audio/profile/phoebe_chubby_6.mp3" },
+      { "phrase": "菲比啾比(╹ㅅ╹ )", "track": "/assets/audio/profile/phoebe_chubby_6.mp3" },
       { "phrase": "菲比啾比(*^▽^*)", "track": "/assets/audio/profile/phoebe_chubby_7.mp3" }
-    ],
-    "dollFonts": [
-      {
-        "family": "Ark Pixel",
-        "src": "/assets/fonts/ark-pixel-12px-proportional-zh-cn.woff"
-      },
-      { "family": "ZCOOL KuaiLe", "src": "/assets/fonts/zcool-kuaile.ttf" },
-      {
-        "family": "ZCOOL QingKe HuangYou",
-        "src": "/assets/fonts/zcool-qingke-huangyou.ttf"
-      },
-      { "family": "ZCOOL XiaoWei", "src": "/assets/fonts/zcool-xiaowei.ttf" }
     ],
     "role": "全干工程师",
     "sticker": "/assets/images/profile/home2.webp"

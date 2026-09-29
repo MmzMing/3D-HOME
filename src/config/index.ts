@@ -49,13 +49,6 @@ const profileSchema = z.object({
       .array(z.object({ phrase: z.string(), track: localAsset }))
       .optional()
       .default([]),
-    dollFonts: z
-      .array(z.object({ family: z.string().min(1), src: localAsset }))
-      .min(1)
-      .optional()
-      .default([
-        { family: 'Ark Pixel', src: '/assets/fonts/ark-pixel-12px-proportional-zh-cn.woff' },
-      ]),
     role: z.string().min(1),
     sticker: localAsset,
   }),
@@ -147,7 +140,10 @@ const siteSchema = z.object({
   description: z.string().min(1),
   image: localAsset,
   imageAlt: z.string().min(1).default(''),
+  imageHeight: z.number().int().positive(),
+  imageWidth: z.number().int().positive(),
   lastmod: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  personDescription: z.string().min(1),
   siteName: z.string().min(1),
   siteUrl: httpsUrl,
   socialDescription: z.string().min(1),

@@ -25,8 +25,9 @@ function textResponse(source: string, contentType: string) {
 
 export function handleRobotsGet(context: EdgeContext) {
   const sitemapUrl = `${getOrigin(context.request)}/sitemap.xml`;
+  // `User-agent: *` 已放行包括各 AI 爬虫在内的所有引擎，只需挡掉返回 JSON 的边缘接口。
   return textResponse(
-    `User-agent: *\nAllow: /\nSitemap: ${sitemapUrl}\n`,
+    `User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${sitemapUrl}\n`,
     'text/plain; charset=UTF-8',
   );
 }

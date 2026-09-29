@@ -1,11 +1,14 @@
 {
   "author": "MmzMing",
-  "description": "MmzMing 的个人主页：全干工程师、Java 与前端开发者，以及一个可交互的 3D 房间。",
-  "image": "/assets/images/profile/home1.webp",
-  "imageAlt": "MmzMing 的可交互 3D 线稿房间主页预览",
-  "lastmod": "2026-09-12",
+  "description": "用 React 与 Three.js 程序化绘制的可交互 3D 线稿房间。走进房间可以查阅 MmzMing 的个人简介、Java 与前端技术栈、GitHub 项目、RSS 书架和常用工具站。",
+  "image": "/assets/images/og-cover.png",
+  "imageAlt": "MmzMing 可交互 3D 线稿房间个人主页封面",
+  "imageHeight": 630,
+  "imageWidth": 1200,
+  "lastmod": "2026-09-29",
+  "personDescription": "全干工程师，主力方向是 Java 后端与前端开发，常用 Spring、MySQL、Redis、RocketMQ、Docker 与 Kubernetes，也用 React 和 Three.js 做可交互 3D 网页。",
   "siteName": "MmzMing 的个人主页",
   "siteUrl": "https://www.mmzhiku.xyz",
   "socialDescription": "探索 MmzMing 的可交互 3D 房间，了解个人项目、技术栈与常用链接。",
-  "title": "MmzMing | 可交互 3D 个人主页"
+  "title": "可交互 3D 线稿房间个人主页 — Java 与前端开发 | MmzMing"
 }

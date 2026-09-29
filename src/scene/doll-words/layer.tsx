@@ -15,6 +15,8 @@ interface PhysicsLayerProps {
   onReady: () => void;
 }
 
+const readyDeadlineMs = 1500;
+
 let physicsModule: Promise<{ default: ComponentType<PhysicsLayerProps> }> | null = null;
 
 function loadPhysicsModule() {
@@ -67,6 +69,13 @@ export function DollWordLayer({ onReady }: { onReady: () => void }) {
       cancelled = true;
     };
   }, [PhysicsLayer, reportReady]);
+
+  // Warming the glyph atlas must never hold the loading screen hostage: on a deadline the room
+  // reveals regardless, and the doll words catch up whenever their fonts actually land.
+  useEffect(() => {
+    const timer = window.setTimeout(reportReady, readyDeadlineMs);
+    return () => window.clearTimeout(timer);
+  }, [reportReady]);
 
   if (PhysicsLayer === null) return null;
   return (

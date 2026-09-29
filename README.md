@@ -33,3 +33,13 @@ pnpm dev
 这块地方我没测试过
 
 SEO 元信息统一维护在 `src/config/site.json`。`/robots.txt` 与 `/sitemap.xml` 由边缘函数按当前请求域名生成，不需要配置站点域名环境变量。
+
+构建时会把 `profile.json`、`links.json`、`feeds.json`、`site-records.json` 渲染成 `index.html` 里的一段纯文本 `.seo-shell`（构建插件 `siteSeo`，见 `vite.config.ts`），供不执行 JavaScript 的搜索引擎与 AI 爬虫读取，同时充当无 JS 用户的阅读视图。React 挂载后 `#root` 不再为空，CSS 会把这段隐藏，不需要额外维护。改这些配置文件即会同步更新它，正文里出现的都是真实链接。同一批配置还会派生出 `dist/llms.txt`。
+
+换分享封面图时，`site.json` 里的 `image`、`imageWidth`、`imageHeight` 三个字段要一起改。og 卡片推荐 1200×630，尺寸声明必须和真实图片一致，报错的尺寸比小的尺寸更糟。`personDescription` 是 JSON-LD 里 `Person` 的简介，与描述站点的 `description` 分开维护。
+
+当前封面 `public/assets/images/og-cover.png` 由 `docs/og-cover.html` 渲染而来（画的是 `assets/fallback/room.svg` 那张线稿房间）。改完文案后重新出图：
+
+```powershell
+& "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --disable-gpu --hide-scrollbars --window-size=1200,630 --screenshot="public\assets\images\og-cover.png" "file:///$PWD\docs\og-cover.html"
+```

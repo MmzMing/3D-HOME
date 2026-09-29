@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#ffffff" />
     <meta name="description" content="__SITE_DESCRIPTION__" />
     <meta name="author" content="__SITE_AUTHOR__" />
-    <meta name="robots" content="index,follow" />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
     <link rel="canonical" href="__SITE_URL__/" vite-ignore />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="__SITE_NAME__" />
@@ -14,6 +14,8 @@
     <meta property="og:description" content="__SITE_SOCIAL_DESCRIPTION__" />
     <meta property="og:url" content="__SITE_URL__/" vite-ignore />
     <meta property="og:image" content="__SITE_OG_IMAGE__" vite-ignore />
+    <meta property="og:image:width" content="__SITE_IMAGE_WIDTH__" />
+    <meta property="og:image:height" content="__SITE_IMAGE_HEIGHT__" />
     <meta property="og:image:alt" content="__SITE_IMAGE_ALT__" />
     <meta property="og:locale" content="zh_CN" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -21,27 +23,14 @@
     <meta name="twitter:description" content="__SITE_SOCIAL_DESCRIPTION__" />
     <meta name="twitter:image" content="__SITE_OG_IMAGE__" vite-ignore />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <script type="application/ld+json">__SITE_JSONLD__</script>
+    <script type="application/ld+json">
+      __SITE_JSONLD__
+    </script>
     <title>__SITE_TITLE__</title>
   </head>
   <body>
     <div id="root"></div>
-    <h1
-      class="visually-hidden"
-      style="
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-        border: 0;
-      "
-    >
-      __SITE_NAME__
-    </h1>
+    __SITE_SEO_SHELL__
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

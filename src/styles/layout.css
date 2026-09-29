@@ -193,6 +193,94 @@
   color: var(--muted);
 }
 
+/* The crawler/no-JS reading view. An empty #root is the signal that the room never took over. */
+body:has(> #root:empty) {
+  overflow: visible;
+}
+
+#root:empty {
+  min-height: 0;
+}
+
+#root:not(:empty) ~ .seo-shell {
+  display: none;
+}
+
+.seo-shell {
+  max-width: 68ch;
+  margin: 0 auto;
+  padding: 40px 24px 72px;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.seo-shell h1 {
+  margin: 0 0 10px;
+  font-family: var(--font-pixel);
+  font-size: 22px;
+  line-height: 1.4;
+}
+
+.seo-shell h2 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+
+.seo-shell h3 {
+  margin: 14px 0 0;
+  font-size: 14px;
+}
+
+.seo-shell p {
+  margin: 6px 0 0;
+}
+
+.seo-block + .seo-block {
+  margin-top: 34px;
+}
+
+.seo-role {
+  color: var(--active);
+}
+
+.seo-shell a {
+  color: var(--active);
+}
+
+.seo-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.seo-list p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.seo-inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.seo-tag {
+  margin-left: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.seo-record {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  font-size: 13px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .room-stage {
     transition: none;
