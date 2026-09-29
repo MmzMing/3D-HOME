@@ -43,8 +43,8 @@ const knownSkills = Array.from(
 );
 
 // AI crawlers and search-engine robots do not execute JavaScript, so the room's content
-// has to exist in the raw HTML. This shell is hidden once React mounts, and doubles as the
-// no-JS reading view.
+// has to exist in the raw HTML. The `hidden` attribute keeps it off screen without needing
+// a stylesheet or script to arrive first; index.html's <noscript> block reveals it.
 function renderSeoShell() {
   const skills = profileData.skills
     .map((group) => {
@@ -74,7 +74,7 @@ function renderSeoShell() {
 
   const { copyright, icp, police } = siteRecordsData;
 
-  return `<div class="seo-shell">
+  return `<div class="seo-shell" hidden>
   <header class="seo-block">
     <h1>${escapeHtml(siteConfig.siteName)}</h1>
     <p class="seo-role">${escapeHtml(profileData.name)} · ${escapeHtml(profileData.intro.role)}</p>

@@ -34,7 +34,7 @@ pnpm dev
 
 SEO 元信息统一维护在 `src/config/site.json`。`/robots.txt` 与 `/sitemap.xml` 由边缘函数按当前请求域名生成，不需要配置站点域名环境变量。
 
-构建时会把 `profile.json`、`links.json`、`feeds.json`、`site-records.json` 渲染成 `index.html` 里的一段纯文本 `.seo-shell`（构建插件 `siteSeo`，见 `vite.config.ts`），供不执行 JavaScript 的搜索引擎与 AI 爬虫读取，同时充当无 JS 用户的阅读视图。React 挂载后 `#root` 不再为空，CSS 会把这段隐藏，不需要额外维护。改这些配置文件即会同步更新它，正文里出现的都是真实链接。同一批配置还会派生出 `dist/llms.txt`。
+构建时会把 `profile.json`、`links.json`、`feeds.json`、`site-records.json` 渲染成 `index.html` 里的一段纯文本 `.seo-shell`（构建插件 `siteSeo`，见 `vite.config.ts`），供不执行 JavaScript 的搜索引擎与 AI 爬虫读取。它默认 `display: none`，只在 `<noscript>` 内联样式里被放开，所以无 JS 的用户能看到完整文字版，而正常访问的首屏不会闪一下文字墙。改那几个配置文件即会同步更新这段内容，正文里出现的都是真实链接。同一批配置还会派生出 `dist/llms.txt`。
 
 换分享封面图时，`site.json` 里的 `image`、`imageWidth`、`imageHeight` 三个字段要一起改。og 卡片推荐 1200×630，尺寸声明必须和真实图片一致，报错的尺寸比小的尺寸更糟。`personDescription` 是 JSON-LD 里 `Person` 的简介，与描述站点的 `description` 分开维护。
 

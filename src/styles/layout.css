@@ -193,19 +193,8 @@
   color: var(--muted);
 }
 
-/* The crawler/no-JS reading view. An empty #root is the signal that the room never took over. */
-body:has(> #root:empty) {
-  overflow: visible;
-}
-
-#root:empty {
-  min-height: 0;
-}
-
-#root:not(:empty) ~ .seo-shell {
-  display: none;
-}
-
+/* Only ever shown when the <noscript> style in index.html lifts the element's `hidden`
+   attribute, i.e. JavaScript is off. Styling lives here; visibility does not. */
 .seo-shell {
   max-width: 68ch;
   margin: 0 auto;

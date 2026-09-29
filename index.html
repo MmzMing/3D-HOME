@@ -23,6 +23,23 @@
     <meta name="twitter:description" content="__SITE_SOCIAL_DESCRIPTION__" />
     <meta name="twitter:image" content="__SITE_OG_IMAGE__" vite-ignore />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <noscript>
+      <style>
+        /* Only parsed when JavaScript is off. !important is required to lift the UA rule
+           behind the shell's `hidden` attribute and to beat Vite's later stylesheet <link>. */
+        body {
+          overflow: visible !important;
+        }
+
+        #root {
+          min-height: 0 !important;
+        }
+
+        .seo-shell {
+          display: block !important;
+        }
+      </style>
+    </noscript>
     <script type="application/ld+json">
       __SITE_JSONLD__
     </script>
